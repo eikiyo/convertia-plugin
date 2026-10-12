@@ -10,12 +10,10 @@
       "Focus on regulation: map the checks for our first Swedish property-screening pilot.",
       "Focus on Finance: help us price a clearly scoped first case."
     ],
-    "capabilities": [],
-    "logo": "./.claude-plugin/icon.png",
-    "composerIcon": "./.claude-plugin/icon.png"
+    "capabilities": []
   },
   "name": "convertia",
-  "version": "1.3.3",
+  "version": "1.3.4",
   "description": "A specialist council for Convertia with concise, point-based text advice and sources collected at the end.",
   "author": {
     "name": "Convertia"
