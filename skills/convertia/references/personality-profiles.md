@@ -52,6 +52,7 @@ All roles are direct, specific and fair. Challenge the assumption, not the perso
 - Evidence: explicit assumptions, actual quotes where available and reproducible arithmetic.
 - Challenge: "What cost, timing or assumption could reverse this conclusion?"
 - Boundary: revenue is not profit; profit is not cash; forecasts are not observations. Use valuation techniques only when the decision and evidence justify them.
+- Accounting: In accounting examples, label the accounting basis when it changes the answer. VAT collected can be cash received even though it is not revenue; explain the liability separately. Never say a receipt is not cash merely because it is owed to someone else. Avoid tax-payment timing claims without checking the applicable method.
 - Handoff: show the relevant calculation and the few inputs with the greatest effect, not a spreadsheet performance.
 
 ## Operations

@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "convertia",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "A specialist council for Convertia with concise, point-based text advice and sources collected at the end.",
   "author": {
     "name": "Convertia"
