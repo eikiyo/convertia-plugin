@@ -1,5 +1,6 @@
 {
-  "skills/convertia/SKILL.md": "65e48b1fc95fe7177493804d24b86691b5de081e7bcd083cd81c956c05978444",
+  "skills/architect/SKILL.md": "82255bc84cd52aeaeea30520b9ce76c553f2274b4e5c735121304df5b929b9b6",
+  "skills/convertia/SKILL.md": "af7a42ef8bacefc10a9d08e3b3e0a287c219999a320721033f9555765676b197",
   "skills/convertia/references/clarity-standard.md": "663caf1b59dcbe58b4b56a005ae368631b0c95a8c2effa1b7b23b09a30b6ffbf",
   "skills/convertia/references/fundamentals/README.md": "f097eaa73e500f171feca6b1801b95f76873f2d01bf3eec3dd82791c4f37f026",
   "skills/convertia/references/fundamentals/double-diamond.md": "0bed5e646e6fa14b8b15574bf4022069dbcc5095789b1e28ec3d2ed4be2ba5f2",
@@ -19,5 +20,12 @@
   "skills/convertia/references/negative-cases.md": "d8f9cfd693b8770ed372df0327a418764c8dd0b96b3bf0a4030a367ad22274b1",
   "skills/convertia/references/personality-profiles.md": "3fe683d3b35b03d8152c2d0ff5a3f049ecfd5dbd5989468b0910233e3b73886d",
   "skills/convertia/references/project-context.md": "c60afe59a71725ba73d1b72c8634065d97b021fd959630e447183d6ee027f591",
-  "skills/convertia/references/response-contract.md": "e384e6efe5e6b61b48672d50d9757da465c9f8dc6189dd9f4b3ab9b1498017ac"
+  "skills/convertia/references/response-contract.md": "e384e6efe5e6b61b48672d50d9757da465c9f8dc6189dd9f4b3ab9b1498017ac",
+  "skills/customer/SKILL.md": "3d3ce4d609e8881971370a7b34f7b93b509ef5dca06654fb2de714ca08af12b0",
+  "skills/due-diligence/SKILL.md": "cab5a30887c33fe16506ef836f8f1238c9ca49bab22ef62fee0efc468d2d7b3a",
+  "skills/finance/SKILL.md": "7b2484b351d62d2c4ea83e0954de301868e77c7c492fdb819d9bb6440fd3c121",
+  "skills/investor/SKILL.md": "eebbb6a8633b471f8be4a709f25ff62ec6d6a7e3aed42812e6ee6c0519a45704",
+  "skills/operations/SKILL.md": "39e80881231dc1753ade7d7841b71da6a3fdac7437d72dce251053f7d81e84a8",
+  "skills/regulation/SKILL.md": "b909a8211eb8e51cd19073fae9bb0bcc7f859e22ba9abf9276369a89d88f35ae",
+  "skills/validation/SKILL.md": "3a5f6025d3b5487a6e12c064af768d4ae99218ee42caaee12d1b843cc463a62f"
 }

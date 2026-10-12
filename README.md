@@ -1,6 +1,6 @@
-# Convertia 1.3.4
+# Convertia 1.4.0
 
-A text-based council for property venture decisions. One shared skill serves ChatGPT, Codex and Claude.
+A text-based council for property venture decisions. Nine skill entry points share one instruction library across ChatGPT, Codex and Claude.
 
 | Perspective | Focus |
 |---|---|
@@ -21,6 +21,24 @@ A text-based council for property venture decisions. One shared skill serves Cha
 "Focus on Customer: challenge our first screening offer."
 
 "What do you mean by acceptance criteria?"
+
+## Role shortcuts
+
+Nine skills share one instruction library. In Claude Code, use the full names below; web menu labels depend on the host and must be checked after installation.
+
+| Command | Focus |
+|---|---|
+| `/convertia:convertia` | Council synthesis |
+| `/convertia:finance` | Pricing, cash, unit economics |
+| `/convertia:regulation` | Swedish approvals and evidence |
+| `/convertia:architect` | Physical and technical feasibility |
+| `/convertia:operations` | Delivery, capacity and handoffs |
+| `/convertia:customer` | Buying, payment and acceptance |
+| `/convertia:investor` | Pre-revenue venture investment |
+| `/convertia:validation` | Discovery and disconfirming experiments |
+| `/convertia:due-diligence` | Evidence-led red-team review |
+
+Add the question after the command. For example: `/convertia:finance What must our first screening fee cover?` A shortcut changes the focus, not the response length. Narrow follow-ups remain short. Due diligence is a review mode across the seven roles, not an invented eighth specialist. Natural-language requests remain supported.
 
 ## Install and sync
 

@@ -25,6 +25,16 @@ for p in ['README.md','skills/convertia/SKILL.md']:
     assert f'# Convertia {v}' in Path(p).read_text(), f'Heading drift: {p}'
 market=json.loads(Path('.claude-plugin/marketplace.json').read_text())
 assert market['plugins']==[{'name':'convertia','source':'./','description':json.loads(Path('plugin.json').read_text())['description']}], 'Marketplace drift'
+expected={'convertia','finance','regulation','architect','operations','customer','investor','validation','due-diligence'}
+entries={p.parent.name:p for p in Path('skills').glob('*/SKILL.md')}
+assert set(entries)==expected, f'Skill entry drift: {set(entries)}'
+documented=set(re.findall(r'\| `/convertia:([a-z-]+)`',Path('README.md').read_text()))
+assert documented==set(entries), 'Documented command drift'
+for name,p in entries.items():
+    body=p.read_text()
+    assert re.search(r'^name: '+re.escape(name)+r'$',body,re.M), f'Skill name mismatch: {p}'
+    if name!='convertia':
+        assert '../convertia/SKILL.md' in body, f'Shared contract link missing: {p}'
 files=sorted(p for p in Path('skills').rglob('*') if p.is_file())
 actual={str(p):hashlib.sha256(p.read_bytes()).hexdigest() for p in files}
 assert actual==json.loads(Path('CONTENT.json').read_text()), 'Content lock drift'
