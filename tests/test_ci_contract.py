@@ -47,6 +47,13 @@ def assert_workflow_contract(config):
     assert steps[package]['if'] == PUBLISH and steps[upload]['if'] == PUBLISH
     assert 'git archive --format=zip --output=dist/convertia.zip "$GITHUB_SHA"' in steps[package]['run']
     assert 'sha256sum dist/convertia.zip > dist/convertia.zip.sha256' in steps[package]['run']
+    commands = steps[package]['run'].strip().splitlines()
+    assert commands == [
+        'mkdir -p dist',
+        'git archive --format=zip --output=dist/convertia.zip "$GITHUB_SHA"',
+        'bash tools/verify-archive.sh dist/convertia.zip . "$GITHUB_SHA"',
+        'sha256sum dist/convertia.zip > dist/convertia.zip.sha256']
+    assert sum('actions/upload-artifact@' in step.get('uses', '') for step in steps) == 1
     assert steps[upload]['with']['name'] == 'convertia-${{ github.sha }}'
     assert steps[upload]['with']['if-no-files-found'] == 'error'
     assert set(steps[upload]['with']['path'].split()) == {'dist/convertia.zip', 'dist/convertia.zip.sha256'}
@@ -57,7 +64,8 @@ def test_current_ci_requires_every_gate_before_exact_commit_archive():
     assert_workflow_contract(workflow())
 
 
-@pytest.mark.parametrize('mutation', ['conditional-live', 'ignored-failure', 'moving-ref', 'package-first'])
+@pytest.mark.parametrize('mutation', ['conditional-live', 'ignored-failure', 'moving-ref', 'package-first',
+                                              'no-archive-check', 'checksum-first', 'premature-upload', 'filter-output'])
 def test_ci_contract_rejects_bypasses(mutation):
     config = copy.deepcopy(workflow())
     steps = config['jobs']['verify']['steps']
@@ -69,6 +77,16 @@ def test_ci_contract_rejects_bypasses(mutation):
         live['continue-on-error'] = 'true'
     elif mutation == 'moving-ref':
         package['run'] = package['run'].replace('"$GITHUB_SHA"', 'main')
+    elif mutation == 'no-archive-check':
+        package['run'] = '\n'.join(line for line in package['run'].splitlines() if 'verify-archive' not in line)
+    elif mutation == 'checksum-first':
+        lines = package['run'].splitlines()
+        lines[-1], lines[-2] = lines[-2], lines[-1]
+        package['run'] = '\n'.join(lines)
+    elif mutation == 'premature-upload':
+        steps.insert(0, copy.deepcopy(steps[-1]))
+    elif mutation == 'filter-output':
+        package['run'] = package['run'].replace('          ', '') + '\nzip -d dist/convertia.zip tools/*'
     else:
         steps.remove(package)
         steps.insert(0, package)
