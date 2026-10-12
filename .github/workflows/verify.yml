@@ -2,6 +2,7 @@ name: Verify shared release
 on:
   push:
   pull_request:
+  workflow_dispatch:
 permissions:
   contents: read
 jobs:
@@ -11,6 +12,12 @@ jobs:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
           fetch-depth: 0
+      - name: Install isolated test dependencies
+        run: |
+          python3 -m venv .venv
+          .venv/bin/python -m pip install -r requirements-test.txt
+      - name: Unit, package and archive E2E tests with 100 percent coverage
+        run: bash tools/test.sh -q
       - name: Check shared content and versions
         run: bash tools/verify.sh
       - name: Prove malformed skill headers are rejected
@@ -32,3 +39,14 @@ jobs:
         run: |
           export PREVIOUS_VERSION="$(git show "$PREVIOUS_SHA:VERSION")"
           bash tools/verify.sh
+  live-connections:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - name: Install isolated test dependencies
+        run: |
+          python3 -m venv .venv
+          .venv/bin/python -m pip install -r requirements-test.txt
+      - name: Read-only GitHub API and connection tests
+        run: .venv/bin/python -m pytest tests_live -q
