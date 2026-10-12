@@ -1,0 +1,31 @@
+{
+  "interface": {
+    "displayName": "Convertia",
+    "shortDescription": "Your property venture council",
+    "longDescription": "Seven specialist perspectives for Convertia, including a demanding Customer and a pre-revenue VC Investor. Atomic fundamentals, selective questioning, silent clarity editing and concise text answers with sources at the end.",
+    "developerName": "Convertia",
+    "category": "Productivity",
+    "defaultPrompt": [
+      "Dissect Convertia's business model and recommend what we should test next.",
+      "Focus on regulation: map the checks for our first Swedish property-screening pilot.",
+      "Focus on Finance: help us price a clearly scoped first case."
+    ],
+    "capabilities": []
+  },
+  "name": "convertia",
+  "version": "1.3.1",
+  "description": "A specialist council for Convertia with concise, point-based text advice and sources collected at the end.",
+  "author": {
+    "name": "Convertia"
+  },
+  "keywords": [
+    "convertia",
+    "property",
+    "sweden",
+    "business-model",
+    "decision-support"
+  ],
+  "skills": "./skills",
+  "repository": "https://github.com/eikiyo/convertia-plugin",
+  "license": "MIT"
+}
