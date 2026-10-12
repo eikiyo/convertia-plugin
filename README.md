@@ -1,4 +1,4 @@
-# Convertia 1.3.1
+# Convertia 1.3.2
 
 A text-based council for property venture decisions. One shared skill serves ChatGPT, Codex and Claude.
 

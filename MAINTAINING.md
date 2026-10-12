@@ -12,3 +12,5 @@ This repository is the sole editable source for Convertia on Claude and ChatGPT.
 ChatGPT repository sync requires a workspace admin and a one-time import. An existing personal archive plugin does not migrate automatically. Claude directory submission also requires one-time account setup and review. Do not claim either connection until verified.
 
 Keep private decks, personal information, internal research, credentials and machine paths outside this public repository. Private archives remain preserved elsewhere. No independent host-specific prompt edits or manual-upload forks.
+
+After reviewing intentional shared-content edits, refresh CONTENT.json using Python's hashlib.sha256 for every file under skills/, keyed by its relative path in sorted order. Then run the verifier again. Never refresh the lock merely to conceal an unexplained difference. CI checks version increases on main updates and pull requests; branch protection must require the verify check to prevent unverified merges. Without that platform setting, CI reports failures but does not stop a direct push from being consumed by a marketplace.
