@@ -1,6 +1,6 @@
 ---
 name: customer
-description: Challenge Convertia as a demanding prospective buyer: scope, price, proof, payment, effort and acceptance. Use when the user requests the customer perspective.
+description: "Challenge Convertia as a demanding prospective buyer: scope, price, proof, payment, effort and acceptance. Use when the user requests the customer perspective."
 ---
 
 # Convertia: Customer

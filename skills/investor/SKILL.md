@@ -1,6 +1,6 @@
 ---
 name: investor
-description: Assess Convertia through a pre-revenue VC lens: venture potential, early evidence, distribution, defensibility and funding milestones. Use when the user requests the investor perspective.
+description: "Assess Convertia through a pre-revenue VC lens: venture potential, early evidence, distribution, defensibility and funding milestones. Use when the user requests the investor perspective."
 ---
 
 # Convertia: Investor

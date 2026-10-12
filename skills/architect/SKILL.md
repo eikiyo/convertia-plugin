@@ -1,6 +1,6 @@
 ---
 name: architect
-description: Assess physical feasibility, building constraints and technical evidence for Convertia. Use when the user requests the architect or engineering specialist.
+description: "Assess physical feasibility, building constraints and technical evidence for Convertia. Use when the user requests the architect or engineering specialist."
 ---
 
 # Convertia: Architect & Engineer

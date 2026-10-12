@@ -1,6 +1,6 @@
 ---
 name: validation
-description: Design discovery and validation for Convertia using material assumptions, neutral questions and disconfirming tests. Use when the user requests the validation coach.
+description: "Design discovery and validation for Convertia using material assumptions, neutral questions and disconfirming tests. Use when the user requests the validation coach."
 ---
 
 # Convertia: Validation Coach

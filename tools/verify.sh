@@ -1,14 +1,74 @@
 #!/usr/bin/env bash
 # Location: tools/verify.sh
-# Purpose: reject release version, content and question-bank drift.
-# Functions: inline release checks.
+# Purpose: reject malformed skill headers and release/content drift.
+# Functions: skill_frontmatter, frontmatter_selftest, inline release checks.
 # Calls: python3 standard library only.
-# Imports: json, hashlib, pathlib, re.
+# Imports: Python standard library only.
 set -euo pipefail
 cd "$(dirname "$0")/.."
-python3 -I - <<'PY'
-import hashlib,json,re
+python3 -I - "$@" <<'PY'
+import hashlib,json,re,shutil,subprocess,sys,tempfile
 from pathlib import Path
+
+def skill_frontmatter(body, name, path):
+    lines=body.splitlines()
+    prefix=f'Invalid skill frontmatter: {path}'
+    if len(lines)<4 or lines[0]!='---' or lines[3]!='---':
+        raise ValueError(f'{prefix}: expected delimiters around exactly two keys')
+    fields={}
+    for line in lines[1:3]:
+        key,separator,value=line.partition(': ')
+        if not separator or key not in {'name','description'} or key in fields:
+            raise ValueError(f'{prefix}: missing, duplicate or unsupported key')
+        fields[key]=value
+    if set(fields)!={'name','description'}:
+        raise ValueError(f'{prefix}: name and description are required')
+    if not re.fullmatch(r'[a-z][a-z0-9-]*',fields['name']) or fields['name']!=name:
+        raise ValueError(f'{prefix}: name must match the skill directory')
+    try:
+        description=json.loads(fields['description'])
+    except json.JSONDecodeError as error:
+        raise ValueError(f'{prefix}: description must be a JSON-quoted string') from error
+    if not isinstance(description,str) or not description.strip():
+        raise ValueError(f'{prefix}: description must be a nonempty string')
+
+def frontmatter_selftest():
+    with tempfile.TemporaryDirectory(prefix='convertia-frontmatter-') as directory:
+        fixture=Path(directory)/'plugin'
+        shutil.copytree(Path.cwd(),fixture,ignore=shutil.ignore_patterns('.git','*.bak'))
+        paths={name:fixture/f'skills/{name}/SKILL.md' for name in ['customer','investor']}
+        originals={name:path.read_text() for name,path in paths.items()}
+        good=originals['customer'].splitlines(keepends=True)
+        cases=[('quoted colon', 'customer', ''.join(good), True)]
+        for name,body in originals.items():
+            lines=body.splitlines(keepends=True)
+            lines[2]='description: '+json.loads(lines[2].partition(': ')[2])+'\n'
+            cases.append((f'original malformed {name}',name,''.join(lines),False))
+        for label,index,replacement in [
+            ('missing opening delimiter',0,''),('missing closing delimiter',3,''),
+            ('missing description',2,''),('duplicate key',2,'name: customer\n'),
+            ('empty description',2,'description: ""\n'),
+            ('non-string description',2,'description: 7\n'),
+            ('wrong name',1,'name: investor\n')]:
+            lines=good.copy()
+            lines[index]=replacement
+            cases.append((label,'customer',''.join(lines),False))
+        for label,name,body,valid in cases:
+            for key,path in paths.items(): path.write_text(originals[key])
+            paths[name].write_text(body)
+            files=sorted(p for p in (fixture/'skills').rglob('*') if p.is_file())
+            lock={str(p.relative_to(fixture)):hashlib.sha256(p.read_bytes()).hexdigest() for p in files}
+            (fixture/'CONTENT.json').write_text(json.dumps(lock))
+            result=subprocess.run(['bash','tools/verify.sh'],cwd=fixture,text=True,capture_output=True,timeout=30)
+            if (result.returncode==0)!=valid or (not valid and 'Invalid skill frontmatter:' not in result.stderr):
+                raise RuntimeError(f'Self-test failed: {label}: {result.stdout}{result.stderr}')
+            print(f'SELFTEST: {label}: {"accepted" if valid else "rejected for malformed frontmatter"}')
+
+if sys.argv[1:]==['--self-test']:
+    frontmatter_selftest()
+    sys.exit(0)
+if sys.argv[1:]:
+    raise ValueError('Usage: bash tools/verify.sh [--self-test]')
 root=Path('.')
 v=(root/'VERSION').read_text().strip()
 import os
@@ -32,7 +92,7 @@ documented=set(re.findall(r'\| `/convertia:([a-z-]+)`',Path('README.md').read_te
 assert documented==set(entries), 'Documented command drift'
 for name,p in entries.items():
     body=p.read_text()
-    assert re.search(r'^name: '+re.escape(name)+r'$',body,re.M), f'Skill name mismatch: {p}'
+    skill_frontmatter(body,name,p)
     if name!='convertia':
         assert '../convertia/SKILL.md' in body, f'Shared contract link missing: {p}'
 files=sorted(p for p in Path('skills').rglob('*') if p.is_file())

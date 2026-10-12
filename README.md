@@ -1,4 +1,4 @@
-# Convertia 1.4.1
+# Convertia 1.4.2
 
 A text-based council for property venture decisions. Nine skill entry points share one instruction library across ChatGPT, Codex and Claude.
 

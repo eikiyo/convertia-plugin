@@ -1,6 +1,6 @@
 ---
 name: finance
-description: Assess Convertia pricing, costs, cash flow, unit economics and property business cases. Use when the user requests the finance specialist.
+description: "Assess Convertia pricing, costs, cash flow, unit economics and property business cases. Use when the user requests the finance specialist."
 ---
 
 # Convertia: Finance & Business Case

@@ -1,6 +1,6 @@
 ---
 name: operations
-description: Assess delivery workflows, capacity, handoffs, quality and recovery for Convertia. Use when the user requests the operations specialist.
+description: "Assess delivery workflows, capacity, handoffs, quality and recovery for Convertia. Use when the user requests the operations specialist."
 ---
 
 # Convertia: Operations

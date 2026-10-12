@@ -1,6 +1,6 @@
 ---
 name: regulation
-description: Assess Swedish property regulation, approval sequences, responsibilities and missing legal evidence for Convertia. Use when the user requests the regulator or regulation specialist.
+description: "Assess Swedish property regulation, approval sequences, responsibilities and missing legal evidence for Convertia. Use when the user requests the regulator or regulation specialist."
 ---
 
 # Convertia: Regulation

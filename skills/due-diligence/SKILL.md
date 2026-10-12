@@ -1,6 +1,6 @@
 ---
 name: due-diligence
-description: Red-team a Convertia business model, proposal or consequential decision. Test claims against evidence, identify deal-breakers and missing proof, and give a conditional proceed or pause recommendation.
+description: "Red-team a Convertia business model, proposal or consequential decision. Test claims against evidence, identify deal-breakers and missing proof, and give a conditional proceed or pause recommendation."
 ---
 
 # Convertia: Due Diligence / Red Team

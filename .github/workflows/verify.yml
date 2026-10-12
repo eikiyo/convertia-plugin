@@ -13,6 +13,8 @@ jobs:
           fetch-depth: 0
       - name: Check shared content and versions
         run: bash tools/verify.sh
+      - name: Prove malformed skill headers are rejected
+        run: bash tools/verify.sh --self-test
       - name: Require a version increase for pull requests
         if: github.event_name == 'pull_request'
         env:
