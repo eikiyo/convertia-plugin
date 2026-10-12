@@ -1,0 +1,14 @@
+{
+  "name": "convertia-marketplace",
+  "owner": {
+    "name": "Convertia"
+  },
+  "plugins": [
+    {
+      "name": "convertia",
+      "source": "./",
+      "description": "A specialist council for Convertia with concise, point-based text advice and sources collected at the end."
+    }
+  ],
+  "description": "Convertia shared council for property venture decisions"
+}

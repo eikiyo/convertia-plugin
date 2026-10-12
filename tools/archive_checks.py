@@ -13,6 +13,7 @@ import tempfile
 import zipfile
 from pathlib import Path, PurePosixPath
 from release_checks import MANIFESTS, require, validate
+from repo_layout import plugin_root
 
 RUNTIME = {*MANIFESTS, '.claude-plugin/marketplace.json', '.claude-plugin/icon.png',
            'README.md', 'LICENSE', 'VERSION', 'CONTENT.json'}
@@ -40,12 +41,17 @@ def git_read(root, *args):
                           capture_output=True, timeout=30).stdout
 
 
+def check_commit(root, commit):
+    require(re.fullmatch(r'[a-f0-9]{40}', commit), 'Expected exact 40-character commit SHA')
+    require(git_read(root, 'rev-parse', f'{commit}^{{commit}}').decode().strip() == commit,
+            'Expected a commit, not a tag object')
+
+
 def source_files(root, commit):
     if commit is not None:
-        require(re.fullmatch(r'[a-f0-9]{40}', commit), 'Expected exact 40-character commit SHA')
-        require(git_read(root, 'rev-parse', f'{commit}^{{commit}}').decode().strip() == commit,
-                'Expected a commit, not a tag object')
-        read = lambda name: git_read(root, 'show', f'{commit}:{name}')
+        check_commit(root, commit)
+        prefix = git_read(root, 'rev-parse', '--show-prefix').decode().strip()
+        read = lambda name: git_read(root, 'show', f'{commit}:{prefix}{name}')
         modes = {entry.split('\t')[1]: entry.split()[0] for entry in
                  git_read(root, 'ls-tree', '-r', commit).decode().splitlines()}
     else:
@@ -128,7 +134,7 @@ def archive_files(archive, expected, prefix):
 
 
 def validate_archive(path, source_root, commit=None, prefix=''):
-    root = Path(source_root).resolve()
+    root = plugin_root(source_root).resolve()
     if prefix:
         safe_path(prefix)
         prefix += '/'
