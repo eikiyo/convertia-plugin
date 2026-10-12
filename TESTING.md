@@ -28,12 +28,14 @@ Cloud sequence: install the candidate, confirm all nine menu entries, run a focu
 | Unit and package integration | `python -m coverage run -m pytest tests` | Owned validation functions accept valid files and reject individual corruptions |
 | Coverage gate | `python -m coverage report --fail-under=100` | Statement and branch coverage of owned Python validation modules |
 | Local E2E | Included in `tests` | Real launcher and packaged candidate work, including rejection with Python optimization |
+| Directory preflight | `bash tools/verify-repository.sh` | Tracked paths, attributes, modes, content types, limits and exact runtime inventory |
+| Official tools | `bash tools/verify-official.sh EXTRACTED_PLUGIN` | Pinned portable schema, all nine Agent Skills entrypoints, strict Claude marketplace/plugin validation on source and extracted candidate |
 | API and connection | `python -m pytest tests_live -q` | GitHub identity, latest published tag, release state, remote content and missing-ref error |
 | Hosted conversation E2E | Cases above, on each installed host | Actual role selection, follow-up, switching, evidence handling and response quality |
 
 Install test-only dependencies in a virtual environment using `python -m pip install -r requirements-test.txt`. Use that environment's interpreter for every command. The deterministic suite needs no network after installation. Live tests require GitHub access and verify the latest published release independently from the candidate. This avoids requiring a new release tag to exist before its candidate can pass CI. Outages or broken release artifacts fail the checks; unavailable services are never skipped into a passing result.
 
-GitHub Actions runs deterministic tests with a 100% coverage threshold and live connection tests in the same required `verify` job on every push and pull request. CI contract tests check the threshold, measured source, sequential checks and protection configuration. Only a successful main run produces the release artifact. Branch protection must be applied to prevent failing merges; the workflow alone cannot stop direct pushes.
+GitHub Actions runs deterministic tests with a 100% coverage threshold and live connection tests in the same required `verify` job on source branch pushes and pull requests. CI contract tests check the threshold, measured source, sequential checks and protection configuration. Every candidate is packaged and checked with official tools; only successful main verification uploads the release artifact and enables the distribution job. Branch protection must be applied to prevent failing merges; the workflow alone cannot stop direct pushes.
 
 This pack has no owned API server, model endpoint, storage service or renderer. API tests exercise the distribution connection. They do not measure GitHub's internal code or prove hosted conversation quality. Never combine these dimensions into a single coverage percentage.
 
@@ -45,6 +47,8 @@ The original customer and investor colon defects are permanent regression cases.
 
 ## Install archive regression boundary
 
-The 1.4.3 source tests passed while its archive included development tooling. Starting in 1.4.4, test the install file set separately: all required runtime files present, no development files, every runtime byte equal to the checked source, no unsafe or duplicate ZIP paths, symlinks or executable files. Prove that default exclusions omit newly tracked developer files and that deliberately leaking a file fails validation. Validate an extracted package using tools from the source checkout; never require the validator itself to be installed.
+The 1.4.3 source tests passed while its archive included development tooling. Version 1.4.4 hid those files with export-ignore, which violated Claude's directory rules. Starting in 1.4.5, use the canonical plugins/convertia subtree and generated distribution branch. Test the install file set separately: required runtime files present, no development files, every runtime byte equal to source, no unsafe or duplicate ZIP paths, symlinks or executable files. Prove unrelated root files stay outside the scoped archive, leaked files fail, and the exact old forbidden attributes fail for their intended reason. Validate extracted files with source-checkout tools; never install the validators in the plugin.
 
-Observe the immutable GitHub codeload archive as well as the CI archive. Test-only source files remain in Git and continue to run in CI. Hosted acceptance additionally requires inspecting the actual directory's received commit and scan findings; archive tests do not establish approval or credential-warning clearance.
+Observe the immutable distribution GitHub codeload archive as well as the CI archive. Test-only source files remain on main and run in CI. Hosted acceptance requires inspecting the actual received commit and findings; archive tests do not establish approval or warning clearance.
+
+Permanent negative cases also include invalid PNG bytes, binary Markdown, missing tracked files, stale source workflows, mismatched distribution trees, wrong tag targets and stale/incomplete host attestations. Test all shell launchers through subprocesses. External command doubles establish wiring only; run the real pinned official tools separately in CI. Do not equate mock success with hosted acceptance.

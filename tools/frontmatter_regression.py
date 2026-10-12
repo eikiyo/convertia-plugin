@@ -9,6 +9,7 @@ import subprocess
 import tempfile
 from pathlib import Path
 from release_checks import content_hashes
+from repo_layout import plugin_root
 
 
 def mutation_cases(originals):
@@ -33,7 +34,7 @@ def mutation_cases(originals):
 def frontmatter_selftest(root):
     with tempfile.TemporaryDirectory(prefix='convertia-frontmatter-') as directory:
         fixture = Path(directory) / 'plugin'
-        shutil.copytree(root, fixture, ignore=shutil.ignore_patterns(
+        shutil.copytree(plugin_root(root), fixture, ignore=shutil.ignore_patterns(
             '.git', '*.bak', '.venv*', '__pycache__', '.pytest_cache', '.coverage*', 'htmlcov'))
         paths = {name: fixture / f'skills/{name}/SKILL.md' for name in ['customer', 'investor']}
         originals = {name: path.read_text() for name, path in paths.items()}
@@ -42,7 +43,7 @@ def frontmatter_selftest(root):
                 path.write_text(originals[key])
             paths[name].write_text(body)
             (fixture / 'CONTENT.json').write_text(json.dumps(content_hashes(fixture)))
-            result = subprocess.run(['bash', 'tools/verify.sh'], cwd=fixture,
+            result = subprocess.run(['bash', str(Path(__file__).with_name('verify.sh')), '--plugin', str(fixture)], cwd=fixture,
                                     text=True, capture_output=True, timeout=30)
             if (result.returncode == 0) != valid or (not valid and 'Invalid skill frontmatter:' not in result.stderr):
                 raise RuntimeError(f'Self-test failed: {label}: {result.stdout}{result.stderr}')

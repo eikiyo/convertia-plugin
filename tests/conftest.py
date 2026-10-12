@@ -14,7 +14,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 @pytest.fixture
-def package(tmp_path):
+def repository(tmp_path):
     target = tmp_path / 'plugin'
     inventory = subprocess.run(['git', 'ls-files', '-z', '--cached', '--others',
                                 '--exclude-standard'], cwd=ROOT, capture_output=True,
@@ -23,8 +23,14 @@ def package(tmp_path):
         source = ROOT / name
         destination = target / name
         destination.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(source, destination)
+        if source.is_file():
+            shutil.copy2(source, destination)
     return target
+
+
+@pytest.fixture
+def package(repository):
+    return repository / 'plugins/convertia'
 
 
 def refresh_lock(root):
@@ -40,13 +46,13 @@ def expected_pass(root):
 
 
 @pytest.fixture
-def candidate(package):
+def candidate(package, repository):
     commands = [['git', 'init', '-q'], ['git', 'add', '-f', '.'],
                 ['git', '-c', 'user.name=Test', '-c', 'user.email=test@example.invalid',
                  '-c', 'core.hooksPath=/dev/null', '-c', 'commit.gpgsign=false',
                  'commit', '-qm', 'candidate fixture']]
     for command in commands:
-        subprocess.run(command, cwd=package, check=True, capture_output=True, timeout=30)
+        subprocess.run(command, cwd=repository, check=True, capture_output=True, timeout=30)
     return package
 
 

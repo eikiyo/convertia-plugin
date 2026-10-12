@@ -1,6 +1,6 @@
 # Location: tests/test_archive_git.py
-# Purpose: prove export rules on real Git archives and the external CLI.
-# Functions: commit_candidate and tracked-source/export mutation tests.
+# Purpose: prove scoped runtime archives and the external CLI.
+# Functions: commit_candidate and tracked-source/archive mutation tests.
 # Calls: temporary Git repositories and archive_checks.
 # Imports: os, subprocess, sys, zipfile, pathlib, pytest, conftest, archive_checks.
 import os
@@ -13,7 +13,8 @@ import archive_checks as checks
 from conftest import archive_candidate
 
 
-def commit_candidate(root):
+def commit_candidate(candidate):
+    root = candidate.parents[1]
     checks.git_read(root, 'add', '-f', '.')
     checks.git_read(root, '-c', 'user.name=Test', '-c', 'user.email=test@example.invalid',
                     '-c', 'core.hooksPath=/dev/null', '-c', 'commit.gpgsign=false',
@@ -22,8 +23,8 @@ def commit_candidate(root):
 
 @pytest.mark.parametrize('name', ['unknown.txt', 'new/deep/unknown.py', 'skills/convertia/unknown.md',
                                  '.claude-plugin/icon.png.bak', '.claude-plugin/unknown.json'])
-def test_default_exclusion_covers_new_tracked_files(candidate, tmp_path, name):
-    file = candidate / name
+def test_scoped_archive_excludes_external_tracked_files(candidate, tmp_path, name):
+    file = candidate.parents[1] / name
     file.parent.mkdir(parents=True, exist_ok=True)
     file.write_text('unapproved runtime file')
     commit_candidate(candidate)
@@ -33,16 +34,25 @@ def test_default_exclusion_covers_new_tracked_files(candidate, tmp_path, name):
         assert name not in package.namelist()
 
 
-@pytest.mark.parametrize('attributes,diagnostic', [
-    ('/tools -export-ignore\n/tools/release_checks.py -export-ignore\n', 'Unexpected archive directory'),
-    ('/README.md export-ignore\n', 'Archive census mismatch'),
-    ('/unknown.txt -export-ignore\n', 'Unexpected archive file')])
-def test_real_export_attribute_corruptions(candidate, tmp_path, attributes, diagnostic):
-    (candidate / 'unknown.txt').write_text('unknown developer content')
-    with (candidate / '.gitattributes').open('a') as output:
-        output.write(attributes)
+def test_committed_missing_readme_rejected(candidate, tmp_path):
+    (candidate / 'README.md').unlink()
     commit_candidate(candidate)
     archive, sha = archive_candidate(candidate, tmp_path)
+    with pytest.raises(ValueError, match='Unsafe source mode: README.md'):
+        checks.validate_archive(archive, candidate, sha)
+
+
+@pytest.mark.parametrize('name,diagnostic', [
+    ('unknown.txt', 'Unexpected archive file'),
+    ('unknown/file.txt', 'Unexpected archive directory')])
+def test_unapproved_runtime_files_are_archived_and_rejected(candidate, tmp_path, name, diagnostic):
+    file = candidate / name
+    file.parent.mkdir(parents=True, exist_ok=True)
+    file.write_text('unapproved runtime content')
+    commit_candidate(candidate)
+    archive, sha = archive_candidate(candidate, tmp_path)
+    with zipfile.ZipFile(archive) as package:
+        assert name in package.namelist()
     with pytest.raises(ValueError, match=diagnostic):
         checks.validate_archive(archive, candidate, sha)
 
@@ -77,7 +87,7 @@ def test_archive_launcher_from_outside(candidate, tmp_path):
     archive, sha = archive_candidate(candidate, tmp_path)
     env = os.environ.copy()
     env['PATH'] = str(Path(sys.executable).parent) + os.pathsep + env['PATH']
-    command = ['bash', str(candidate / 'tools/verify-archive.sh'), str(archive), str(candidate), sha]
+    command = ['bash', str(candidate.parents[1] / 'tools/verify-archive.sh'), str(archive), str(candidate), sha]
     result = subprocess.run(command, cwd=tmp_path, env=env, capture_output=True, text=True, timeout=30)
     assert result.returncode == 0, result.stderr
     assert 'clean archive: 38' in result.stdout

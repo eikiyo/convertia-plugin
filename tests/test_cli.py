@@ -24,6 +24,16 @@ def test_main_bad_argument(package, capsys):
     assert 'Usage:' in capsys.readouterr().err
 
 
+def test_main_external_plugin(package, tmp_path, monkeypatch, capsys):
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.delenv('PREVIOUS_VERSION', raising=False)
+    assert verify.main(['--plugin', str(package)]) == 0
+    assert capsys.readouterr().out.strip() == expected_pass(package)
+    (package / 'VERSION').write_text('invalid')
+    assert verify.main(['--plugin', str(package)]) == 1
+    assert 'Invalid VERSION' in capsys.readouterr().err
+
+
 def test_main_read_error(package, capsys):
     (package / 'VERSION').unlink()
     assert verify.main([], package) == 1

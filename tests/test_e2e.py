@@ -23,31 +23,31 @@ def launcher_env():
     return env
 
 
-def test_launcher_from_other_directory(package, tmp_path):
-    result = run_command(['bash', str(package / 'tools/verify.sh')], tmp_path, launcher_env())
+def test_launcher_from_other_directory(package, repository, tmp_path):
+    result = run_command(['bash', str(repository / 'tools/verify.sh')], tmp_path, launcher_env())
     assert result.returncode == 0, result.stderr
     assert expected_pass(package) in result.stdout
 
 
 @pytest.mark.parametrize('arguments,message', [(['--unknown'], 'Usage:'), ([], 'Invalid VERSION')])
-def test_launcher_failure(package, arguments, message):
+def test_launcher_failure(package, repository, arguments, message):
     if not arguments:
         (package / 'VERSION').write_text('bad-version')
-    result = run_command(['bash', 'tools/verify.sh', *arguments], package, launcher_env())
+    result = run_command(['bash', 'tools/verify.sh', *arguments], repository, launcher_env())
     assert result.returncode != 0
     assert message in result.stderr
     assert 'PASS:' not in result.stdout
 
 
-def test_optimized_python_cannot_bypass_validation(package):
+def test_optimized_python_cannot_bypass_validation(package, repository):
     (package / 'CONTENT.json').write_text('{}')
     code = 'import sys;sys.path.insert(0,"tools");from verify import main;raise SystemExit(main([]))'
-    result = run_command([sys.executable, '-O', '-I', '-c', code], package, launcher_env())
+    result = run_command([sys.executable, '-O', '-I', '-c', code], repository, launcher_env())
     assert result.returncode == 1
     assert 'Content lock drift' in result.stderr
 
 
-def test_shell_selftest(package):
-    result = run_command(['bash', 'tools/verify.sh', '--self-test'], package, launcher_env())
+def test_shell_selftest(repository):
+    result = run_command(['bash', 'tools/verify.sh', '--self-test'], repository, launcher_env())
     assert result.returncode == 0, result.stderr
     assert result.stdout.count('SELFTEST:') == 10

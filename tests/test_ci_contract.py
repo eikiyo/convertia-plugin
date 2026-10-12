@@ -2,7 +2,7 @@
 # Purpose: prevent release CI from bypassing measured tests or publishing unchecked bytes.
 # Functions: workflow, coverage configuration and test discipline assertions.
 # Calls: local configuration and source reads only.
-# Imports: ast, copy, re, tomllib, pathlib, pytest, yaml.
+# Imports: ast, copy, json, re, tomllib, pathlib, pytest, yaml.
 import ast
 import copy
 import json
@@ -31,33 +31,52 @@ def assert_coverage_contract(config):
     assert not report.get('exclude_lines') and not report.get('exclude_also')
 
 
+def assert_distribution_contract(config):
+    assert set(config['jobs']) == {'verify', 'distribute'}
+    distribution = config['jobs']['distribute']
+    assert distribution['needs'] == 'verify' and distribution['if'] == PUBLISH
+    assert distribution['permissions'] == {'contents': 'write'}
+    assert distribution['concurrency'] == {'group': 'convertia-distribution', 'cancel-in-progress': 'false'}
+    assert distribution['steps'][-1]['run'] == 'bash tools/publish-distribution.sh "$GITHUB_SHA"'
+    assert config['permissions'] == {'contents': 'read'}
+
+
 def assert_workflow_contract(config):
-    assert set(config['jobs']) == {'verify'}
+    assert_distribution_contract(config)
     job = config['jobs']['verify']
     assert 'if' not in job and 'continue-on-error' not in job
     steps = job['steps']
     assert not any('continue-on-error' in step for step in steps)
     coverage = next(index for index, step in enumerate(steps) if step.get('run') == COVERAGE)
     live = next(index for index, step in enumerate(steps) if step.get('run') == LIVE)
-    package = next(index for index, step in enumerate(steps) if 'git archive' in step.get('run', ''))
+    package = next(index for index, step in enumerate(steps) if ' archive --format=zip' in step.get('run', ''))
     upload = next(index for index, step in enumerate(steps) if 'actions/upload-artifact@' in step.get('uses', ''))
     assert 'if' not in steps[coverage] and 'if' not in steps[live]
     assert coverage < live < package < upload
     assert all(index < package for index, step in enumerate(steps) if 'PREVIOUS_VERSION' in step.get('run', ''))
-    assert steps[package]['if'] == PUBLISH and steps[upload]['if'] == PUBLISH
-    assert 'git archive --format=zip --output=dist/convertia.zip "$GITHUB_SHA"' in steps[package]['run']
-    assert 'sha256sum dist/convertia.zip > dist/convertia.zip.sha256' in steps[package]['run']
-    commands = steps[package]['run'].strip().splitlines()
-    assert commands == [
-        'mkdir -p dist',
-        'git archive --format=zip --output=dist/convertia.zip "$GITHUB_SHA"',
-        'bash tools/verify-archive.sh dist/convertia.zip . "$GITHUB_SHA"',
-        'sha256sum dist/convertia.zip > dist/convertia.zip.sha256']
+    assert 'if' not in steps[package] and steps[upload]['if'] == PUBLISH
+    assert_package_commands(steps[package]['run'])
+    official = next(index for index, step in enumerate(steps) if step.get('run') == 'bash tools/verify-official.sh dist/plugin')
+    assert package < official < upload and 'if' not in steps[official]
+    policy = next(index for index, step in enumerate(steps) if step.get('run') == 'bash tools/verify-repository.sh')
+    assert policy < coverage and 'if' not in steps[policy]
     assert sum('actions/upload-artifact@' in step.get('uses', '') for step in steps) == 1
     assert steps[upload]['with']['name'] == 'convertia-${{ github.sha }}'
     assert steps[upload]['with']['if-no-files-found'] == 'error'
     assert set(steps[upload]['with']['path'].split()) == {'dist/convertia.zip', 'dist/convertia.zip.sha256'}
     assert all(re.fullmatch(r'[^@]+@[a-f0-9]{40}', step['uses']) for step in steps if 'uses' in step)
+
+
+def assert_package_commands(command):
+    assert 'git -C plugins/convertia archive --format=zip --output=../../dist/convertia.zip "$GITHUB_SHA"' in command
+    assert 'sha256sum dist/convertia.zip > dist/convertia.zip.sha256' in command
+    commands = command.strip().splitlines()
+    assert commands == [
+        'mkdir -p dist',
+        'git -C plugins/convertia archive --format=zip --output=../../dist/convertia.zip "$GITHUB_SHA"',
+        'bash tools/verify-archive.sh dist/convertia.zip . "$GITHUB_SHA"',
+        'sha256sum dist/convertia.zip > dist/convertia.zip.sha256',
+        '.venv/bin/python -m zipfile -e dist/convertia.zip dist/plugin']
 
 
 def test_current_ci_requires_every_gate_before_exact_commit_archive():
@@ -70,7 +89,7 @@ def test_ci_contract_rejects_bypasses(mutation):
     config = copy.deepcopy(workflow())
     steps = config['jobs']['verify']['steps']
     live = next(step for step in steps if step.get('run') == LIVE)
-    package = next(step for step in steps if 'git archive' in step.get('run', ''))
+    package = next(step for step in steps if ' archive --format=zip' in step.get('run', ''))
     if mutation == 'conditional-live':
         live['if'] = "github.event_name == 'workflow_dispatch'"
     elif mutation == 'ignored-failure':
@@ -81,7 +100,9 @@ def test_ci_contract_rejects_bypasses(mutation):
         package['run'] = '\n'.join(line for line in package['run'].splitlines() if 'verify-archive' not in line)
     elif mutation == 'checksum-first':
         lines = package['run'].splitlines()
-        lines[-1], lines[-2] = lines[-2], lines[-1]
+        verifier = next(index for index, line in enumerate(lines) if 'verify-archive' in line)
+        checksum = next(index for index, line in enumerate(lines) if 'sha256sum' in line)
+        lines[verifier], lines[checksum] = lines[checksum], lines[verifier]
         package['run'] = '\n'.join(lines)
     elif mutation == 'premature-upload':
         steps.insert(0, copy.deepcopy(steps[-1]))
@@ -139,3 +160,20 @@ def test_required_main_protection_contract():
     assert policy['required_conversation_resolution'] is True
     assert policy['allow_force_pushes'] is False
     assert policy['allow_deletions'] is False
+
+
+@pytest.mark.parametrize('mutation', ['no-dependency', 'wrong-branch', 'global-write', 'conditional-official'])
+def test_distribution_and_official_contract_reject_bypasses(mutation):
+    config = copy.deepcopy(workflow())
+    if mutation == 'no-dependency':
+        config['jobs']['distribute']['needs'] = 'unchecked'
+    elif mutation == 'wrong-branch':
+        config['jobs']['distribute']['if'] = "github.event_name == 'push'"
+    elif mutation == 'global-write':
+        config['permissions']['contents'] = 'write'
+    else:
+        official = next(step for step in config['jobs']['verify']['steps']
+                        if step.get('run') == 'bash tools/verify-official.sh dist/plugin')
+        official['if'] = "github.event_name == 'workflow_dispatch'"
+    with pytest.raises(AssertionError):
+        assert_workflow_contract(config)

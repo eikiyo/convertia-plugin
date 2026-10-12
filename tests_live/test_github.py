@@ -33,6 +33,9 @@ def release():
     prefix = archive.namelist()[0]
     files = {name[len(prefix):]: archive.read(name)
              for name in archive.namelist() if not name.endswith('/')}
+    if 'plugins/convertia/plugin.json' in files:
+        files = {name.removeprefix('plugins/convertia/'): body for name, body in files.items()
+                 if name.startswith('plugins/convertia/')}
     return repository, commit, prefix, listing, files, tag_name.removeprefix('v')
 
 
