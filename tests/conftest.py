@@ -37,3 +37,23 @@ def expected_pass(root):
     version = (root / 'VERSION').read_text().strip()
     count = len(json.loads((root / 'CONTENT.json').read_text()))
     return f'PASS: {version}; {count} shared files; 918 unique questions; content lock matches'
+
+
+@pytest.fixture
+def candidate(package):
+    commands = [['git', 'init', '-q'], ['git', 'add', '-f', '.'],
+                ['git', '-c', 'user.name=Test', '-c', 'user.email=test@example.invalid',
+                 '-c', 'core.hooksPath=/dev/null', '-c', 'commit.gpgsign=false',
+                 'commit', '-qm', 'candidate fixture']]
+    for command in commands:
+        subprocess.run(command, cwd=package, check=True, capture_output=True, timeout=30)
+    return package
+
+
+def archive_candidate(candidate, tmp_path, prefix=''):
+    path = tmp_path / 'candidate.zip'
+    subprocess.run(['git', 'archive', '--format=zip', f'--output={path}',
+                    f'--prefix={prefix}', 'HEAD'], cwd=candidate, check=True, timeout=30)
+    sha = subprocess.run(['git', 'rev-parse', 'HEAD'], cwd=candidate, check=True,
+                         capture_output=True, text=True, timeout=30).stdout.strip()
+    return path, sha

@@ -46,6 +46,7 @@ jobs:
         run: |
           mkdir -p dist
           git archive --format=zip --output=dist/convertia.zip "$GITHUB_SHA"
+          bash tools/verify-archive.sh dist/convertia.zip . "$GITHUB_SHA"
           sha256sum dist/convertia.zip > dist/convertia.zip.sha256
       - name: Upload verified release artifact
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'

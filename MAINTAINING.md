@@ -24,6 +24,14 @@ After reviewing intentional shared-content edits, refresh CONTENT.json using Pyt
 
 The personal ChatGPT upload interface is outside GitHub's branch-protection controls. This maintainer contract requires the checked artifact for every update. It does not claim to disable unrelated manual uploads in ChatGPT. A future repository import must also track protected main.
 
+## Install boundary, from 1.4.4
+
+The source repository retains its tests, tools, CI and maintainer contracts. Git archives export only the explicit install allowlist. The release job validates the actual archive against its exact checked commit before checksum/upload. New files are excluded unless deliberately admitted; corrupted export rules must fail the package gate rather than silently shipping development code.
+
+Before publishing, download GitHub codeload for the candidate's immutable commit and verify the same runtime inventory and bytes. This establishes GitHub archive behavior, not that every host uses an archive. A full Git clone still contains developer files. Inspect the Claude directory's received file count, commit and findings. If it ignores export attributes, resolve its source-path configuration before claiming a clean install there.
+
+Personal ChatGPT updates overlay prior releases. Obtain the complete installed file inventory, explicitly remove the known development files from previous releases, and verify each deletion after upload. Do not delete unrelated private context. Keep the existing private presentation private and unchanged; its presence is a documented host-specific content exception, not public archive parity. Never publish it into GitHub.
+
 ## Applying GitHub protection
 
 An administrator applies the checked-in settings with:

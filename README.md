@@ -1,4 +1,4 @@
-# Convertia 1.4.3
+# Convertia 1.4.4
 
 A text-based council for property venture decisions. Nine skill entry points share one instruction library across ChatGPT, Codex and Claude.
 
@@ -52,9 +52,9 @@ ChatGPT workspace: Admin Console > Plugins > Add > Import marketplace. Source `h
 
 No MCP, external services, analytics, transcript storage, persistent memory or model guarantee. Your chat provider's normal terms and data controls apply. Private presentations and internal research are excluded. Supply your own business context. Simulated roles are not real customer evidence, investment offers or professional approval.
 
-## Maintenance
+## Package contents
 
-Edit only this repository. Both hosts load the same `skills/convertia` directory. Run `bash tools/verify.sh` and the behavior cases in TESTING.md before release. All manifest versions must match VERSION. Keep published tags immutable. See MAINTAINING.md for the complete release contract.
+The install archive contains the shared skills, required manifests, icon, version and content record, this guide and the license. Development tests, CI configuration and maintainer instructions stay in the source repository and are not installed from release archives. A full Git clone remains a development checkout.
 
 ## Support
 

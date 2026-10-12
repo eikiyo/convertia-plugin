@@ -42,3 +42,9 @@ This pack has no owned API server, model endpoint, storage service or renderer. 
 Each release rule needs a valid control and a corruption rejected for its intended reason. Header mutations refresh the fixture content lock so a hash mismatch cannot conceal parser results. Real headers also pass an independent PyYAML parser. Validate candidate bytes and retain immutable tags. An optimized-Python negative test proves validation cannot be disabled.
 
 The original customer and investor colon defects are permanent regression cases. A mutation rejected for the wrong diagnostic is a test failure.
+
+## Install archive regression boundary
+
+The 1.4.3 source tests passed while its archive included development tooling. Starting in 1.4.4, test the install file set separately: all required runtime files present, no development files, every runtime byte equal to the checked source, no unsafe or duplicate ZIP paths, symlinks or executable files. Prove that default exclusions omit newly tracked developer files and that deliberately leaking a file fails validation. Validate an extracted package using tools from the source checkout; never require the validator itself to be installed.
+
+Observe the immutable GitHub codeload archive as well as the CI archive. Test-only source files remain in Git and continue to run in CI. Hosted acceptance additionally requires inspecting the actual directory's received commit and scan findings; archive tests do not establish approval or credential-warning clearance.

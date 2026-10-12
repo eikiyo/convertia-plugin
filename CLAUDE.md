@@ -13,3 +13,9 @@ Read MAINTAINING.md and TESTING.md before changing this repository. These instru
 - Markdown content, vendor internals and hosted conversation behavior do not have a code-line coverage percentage. Record hosted conversation E2E separately as passed, failed or not run. A static or API check does not establish behavioral parity.
 
 No model call, UI rendering or transcript storage is owned by this text-only plugin. Do not invent API coverage for absent services.
+
+## Law: minimal install contents
+
+Repository contents and installed contents are different contracts. Tests, CI, maintainer instructions and validation tools remain tracked but must not enter install archives. Default-deny export rules and exact archive inventory/byte validation gate release. A passing source test or code coverage report cannot substitute for checking the finished install archive.
+
+For overlay updates, remove previously installed developer files by their exact inventoried paths and verify absence after upload. Preserve unrelated private user content. Verify the actual GitHub archive separately from a local archive; verify the directory's received version and findings separately from both. A full Git clone does not honor archive exclusions.
