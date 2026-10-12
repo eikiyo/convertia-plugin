@@ -28,12 +28,12 @@ Cloud sequence: install the candidate, confirm all nine menu entries, run a focu
 | Unit and package integration | `python -m coverage run -m pytest tests` | Owned validation functions accept valid files and reject individual corruptions |
 | Coverage gate | `python -m coverage report --fail-under=100` | Statement and branch coverage of owned Python validation modules |
 | Local E2E | Included in `tests` | Real launcher and packaged candidate work, including rejection with Python optimization |
-| API and connection | `python -m pytest tests_live -q` | GitHub identity, main/tag agreement, release state, remote content and missing-ref error |
+| API and connection | `python -m pytest tests_live -q` | GitHub identity, latest published tag, release state, remote content and missing-ref error |
 | Hosted conversation E2E | Cases above, on each installed host | Actual role selection, follow-up, switching, evidence handling and response quality |
 
-Install test-only dependencies in a virtual environment using `python -m pip install -r requirements-test.txt`. Use that environment's interpreter for every command. The deterministic suite needs no network after installation. Live tests require GitHub access and candidate shared content equal to the published main/tag release. They fail on outages or drift; unavailable services are never skipped into a passing result.
+Install test-only dependencies in a virtual environment using `python -m pip install -r requirements-test.txt`. Use that environment's interpreter for every command. The deterministic suite needs no network after installation. Live tests require GitHub access and verify the latest published release independently from the candidate. This avoids requiring a new release tag to exist before its candidate can pass CI. Outages or broken release artifacts fail the checks; unavailable services are never skipped into a passing result.
 
-GitHub Actions runs deterministic tests with a 100% coverage threshold. The manually triggered workflow also runs live connection tests. Branch protection must require the verification job to prevent failing merges; the workflow alone cannot stop direct pushes.
+GitHub Actions runs deterministic tests with a 100% coverage threshold and live connection tests in the same required `verify` job on every push and pull request. CI contract tests check the threshold, measured source, sequential checks and protection configuration. Only a successful main run produces the release artifact. Branch protection must be applied to prevent failing merges; the workflow alone cannot stop direct pushes.
 
 This pack has no owned API server, model endpoint, storage service or renderer. API tests exercise the distribution connection. They do not measure GitHub's internal code or prove hosted conversation quality. Never combine these dimensions into a single coverage percentage.
 

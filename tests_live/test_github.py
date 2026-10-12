@@ -6,14 +6,12 @@
 import hashlib
 import io
 import json
-from pathlib import Path
 from urllib.error import HTTPError
 from urllib.request import Request, urlopen
 from zipfile import ZipFile
 
 import pytest
 
-ROOT = Path(__file__).resolve().parents[1]
 API = 'https://api.github.com/repos/eikiyo/convertia-plugin'
 
 
@@ -26,17 +24,16 @@ def get(url):
 
 @pytest.fixture(scope='module')
 def release():
-    version = (ROOT / 'VERSION').read_text().strip()
     repository = json.loads(get(API))
-    commit = json.loads(get(API + '/commits/' + repository['default_branch']))
-    tag = json.loads(get(API + '/commits/v' + version))
-    listing = json.loads(get(API + '/releases/tags/v' + version))
+    listing = json.loads(get(API + '/releases/latest'))
+    tag_name = listing['tag_name']
+    commit = json.loads(get(API + '/commits/' + tag_name))
     archive = ZipFile(io.BytesIO(get(
         'https://codeload.github.com/eikiyo/convertia-plugin/zip/' + commit['sha'])))
     prefix = archive.namelist()[0]
     files = {name[len(prefix):]: archive.read(name)
              for name in archive.namelist() if not name.endswith('/')}
-    return repository, commit, tag, listing, files, version
+    return repository, commit, prefix, listing, files, tag_name.removeprefix('v')
 
 
 def test_repository_identity_and_visibility(release):
@@ -46,8 +43,10 @@ def test_repository_identity_and_visibility(release):
     assert repository['archived'] is False
 
 
-def test_main_and_immutable_release_tag_agree(release):
-    assert release[1]['sha'] == release[2]['sha']
+def test_published_tag_resolves_to_archived_commit(release):
+    commit, prefix = release[1:3]
+    assert len(commit['sha']) == 40
+    assert prefix == 'convertia-plugin-' + commit['sha'] + '/'
 
 
 def test_published_release_is_not_draft_or_prerelease(release):
@@ -57,11 +56,11 @@ def test_published_release_is_not_draft_or_prerelease(release):
     assert listing['prerelease'] is False
 
 
-def test_remote_shared_content_equals_candidate(release):
+def test_published_archive_matches_its_own_content_lock(release):
     files = release[4]
     actual = {name: hashlib.sha256(body).hexdigest()
               for name, body in files.items() if name.startswith('skills/')}
-    assert actual == json.loads((ROOT / 'CONTENT.json').read_text())
+    assert actual == json.loads(files['CONTENT.json'])
 
 
 def test_remote_manifests_agree(release):

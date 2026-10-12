@@ -39,14 +39,20 @@ jobs:
         run: |
           export PREVIOUS_VERSION="$(git show "$PREVIOUS_SHA:VERSION")"
           bash tools/verify.sh
-  live-connections:
-    if: github.event_name == 'workflow_dispatch'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
-      - name: Install isolated test dependencies
-        run: |
-          python3 -m venv .venv
-          .venv/bin/python -m pip install -r requirements-test.txt
-      - name: Read-only GitHub API and connection tests
+      - name: Read-only published-release API and connection tests
         run: .venv/bin/python -m pytest tests_live -q
+      - name: Package the verified main commit
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          mkdir -p dist
+          git archive --format=zip --output=dist/convertia.zip "$GITHUB_SHA"
+          sha256sum dist/convertia.zip > dist/convertia.zip.sha256
+      - name: Upload verified release artifact
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: convertia-${{ github.sha }}
+          path: |
+            dist/convertia.zip
+            dist/convertia.zip.sha256
+          if-no-files-found: error
