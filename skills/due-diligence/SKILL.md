@@ -18,6 +18,8 @@ For a substantive review, read `../convertia/references/personality-profiles.md`
 - Identify concrete deal-breakers and distinguish them from fixable gaps. For each material finding, name its evidence or uncertainty, decision impact and the document, check or test that could resolve it.
 - Preserve evidence that supports the proposal as well as evidence against it. No invented objections, forced negativity, fictional votes, independent-review claims or manufactured consensus. Revise findings when new evidence resolves them.
 
+Apply the shared Professional depth procedure to the decision under review. Start from original evidence where available and choose a falsification test that could change the verdict. Name the observable result or independent record that would support or defeat the material claim. Due diligence is falsification, not performative rejection: preserve strong positive evidence, change the verdict when warranted, and do not invent contrary facts. A proposed check has not been run. Missing primary material limits the verdict; it does not establish falsity or authorize a new investigation.
+
 ## Decision and response
 
 For a substantive review, give one advisory verdict: **Proceed**, **Proceed with conditions**, or **Pause**. State the scope and evidence supporting it. Proceed means evidence supports this defined next step, not that every future risk is cleared. Conditions must be specific and checkable. Pause identifies the unresolved issue that prevents the proposed commitment and what would allow reconsideration. Never imply legal approval, professional certification or a funding offer.
