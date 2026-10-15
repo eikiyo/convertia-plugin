@@ -5,7 +5,7 @@
 # Imports: pytest, conftest, content_contracts, release_checks.
 import pytest
 from conftest import refresh_lock, expected_pass
-from content_contracts import REQUIRED, NORMATIVE, RESPONSE, contract_errors
+from content_contracts import REQUIRED, NORMATIVE, RESPONSE, LANGUAGE, contract_errors
 from release_checks import validate
 
 CLAUSES = [(name, clause) for name, clauses in REQUIRED.items() for clause in clauses]
@@ -36,6 +36,41 @@ def test_unavailable_scope_rule_cannot_be_replaced_by_unverified_host_claim(pack
     refresh_lock(package)
     assert contract_errors(package) == [f'Missing instruction contract: {RESPONSE}: {clause}']
     with pytest.raises(ValueError, match='Missing instruction contract:.*Scope capability limits'):
+        validate(package)
+
+
+@pytest.mark.parametrize('clause,replacement', [
+    ('Swedish must be the complete counterpart of English, not a summary.',
+     'Swedish may summarize the English definition and example.'),
+    ('Every material definition, example, contract issue, qualification, warning and next action must appear in both language blocks.',
+     'Keep the 10000 SEK fee, 200000 SEK spending and reliance caveats in English only.'),
+    ('Shorten both versions together; never save space by dropping Swedish propositions.',
+     'Save space by shortening only the Swedish qualifications.'),
+    ('Keep all substantive prose inside the two language blocks.',
+     'Put a shared English warning after the two language blocks.'),
+    ('Do not append an English-only or Swedish-only caveat, recommendation or conclusion.',
+     'Append an English-only disclaimer on enforceability.'),
+])
+def test_bilingual_completeness_rule_replacement_rejected(package, clause, replacement):
+    target = package / LANGUAGE
+    assert clause in target.read_text()
+    target.write_text(target.read_text().replace(clause, replacement))
+    refresh_lock(package)
+    assert contract_errors(package) == [f'Missing instruction contract: {LANGUAGE}: {clause}']
+    with pytest.raises(ValueError, match='Missing instruction contract:'):
+        validate(package)
+
+
+def test_revision_readback_cannot_be_replaced_by_chat_only_success(package):
+    target = package / RESPONSE
+    clause = ('Before claiming a revision is complete, read back the actual revised '
+              'deliverable and verify the changed facts, dependent calculations and preserved unknowns.')
+    assert clause in target.read_text()
+    target.write_text(target.read_text().replace(
+        clause, 'Report the revised 12000 SEK fee in chat and reuse the original 10000 SEK file link.'))
+    refresh_lock(package)
+    assert contract_errors(package) == [f'Missing instruction contract: {RESPONSE}: {clause}']
+    with pytest.raises(ValueError, match='Missing instruction contract:.*read back the actual revised'):
         validate(package)
 
 

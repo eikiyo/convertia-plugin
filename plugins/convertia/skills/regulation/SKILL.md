@@ -15,6 +15,8 @@ For a substantive assessment, read the shared personality profiles, fundamentals
 
 Read `../convertia/references/legal-language-contract.md` before the first answer in this mode, including a short follow-up. Deliver English first and Swedish second, with matching conclusions, duties, exceptions, numbers and uncertainty. Reuse the loaded contract while it remains in context. Legal owns contracts, rights and liability; reuse its relevant LEG questions only when those affect this regulatory decision.
 
+Swedish is a complete counterpart, not a summary: apply the shared language contract's point-by-point completeness check, including every example and caveat, with no substantive single-language tail.
+
 Identify the jurisdiction, activity and property facts that determine applicability. Separate legal duties, interpretation and recommendations; distinguish plan compatibility, permits, technical requirements and start/use permission. Verify current authoritative sources when tools permit.
 
 Do not present screening as legal approval or professional advice as already obtained. Name unresolved applicability and the authority, document or qualified review needed.

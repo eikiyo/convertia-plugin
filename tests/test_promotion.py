@@ -222,7 +222,8 @@ def release_candidate(origin, candidate, tmp_path):
     distribution = git(root, '-c', 'user.name=Test', '-c', 'user.email=test@example.invalid',
                        'commit-tree', tree, '-m', f'Source-Commit: {source}')
     git(root, 'push', 'origin', f'{distribution}:refs/heads/distribution')
-    expected = dict(zip(FIELDS, (source, distribution, tree, '1.5.0',
+    version = (root / 'plugins/convertia/VERSION').read_text().strip()
+    expected = dict(zip(FIELDS, (source, distribution, tree, version,
                                 hashlib.sha256(archive.read_bytes()).hexdigest())))
     return root, archive, source, distribution, expected
 
@@ -240,26 +241,27 @@ def advance_remote(root, ref):
     ('lightweight', True), ('annotated', True),
 ])
 def test_existing_release_tag(release_candidate, tag_kind, wrong):
-    root, _, source, distribution, _ = release_candidate
+    root, _, source, distribution, expected = release_candidate
+    version = expected['version']
     if tag_kind != 'absent':
         options = ['-am', 'Release attestation'] if tag_kind == 'annotated' else []
         git(root, '-c', 'user.name=Test', '-c', 'user.email=test@example.invalid',
-            '-c', 'tag.gpgsign=false', 'tag', *options, 'v1.5.0',
+            '-c', 'tag.gpgsign=false', 'tag', *options, f'v{version}',
             distribution if wrong else source)
-        git(root, 'push', 'origin', 'refs/tags/v1.5.0')
+        git(root, 'push', 'origin', f'refs/tags/v{version}')
     if wrong:
         with pytest.raises(ValueError, match='Existing release tag points to another commit'):
-            checks.check_current_candidate(root, source, distribution, '1.5.0')
+            checks.check_current_candidate(root, source, distribution, version)
     else:
-        assert checks.check_current_candidate(root, source, distribution, '1.5.0') is None
+        assert checks.check_current_candidate(root, source, distribution, version) is None
 
 
 @pytest.mark.parametrize('ref', ['main', 'distribution'])
 def test_stale_remote_candidate(release_candidate, ref):
-    root, _, source, distribution, _ = release_candidate
+    root, _, source, distribution, expected = release_candidate
     advance_remote(root, ref)
     with pytest.raises(ValueError, match='Stale promotion: remote candidate changed'):
-        checks.check_current_candidate(root, source, distribution, '1.5.0')
+        checks.check_current_candidate(root, source, distribution, expected['version'])
 
 
 @pytest.mark.parametrize('mode', ['valid', 'bad-host', 'bad-ci', 'stale-main', 'stale-distribution'])
@@ -284,8 +286,9 @@ def test_promotion_gate_order(release_candidate, tmp_path, monkeypatch, mode):
         with pytest.raises(ValueError, match=diagnostic):
             checks.promote_release(root, archive, source, distribution, path)
     api = ('api', f'repos/{checks.REPOSITORY}/actions/runs/123')
-    notes = (f'Both-host acceptance attested for version 1.5.0.\nSource: {source}\n'
+    version = expected['version']
+    notes = (f'Both-host acceptance attested for version {version}.\nSource: {source}\n'
              f'Distribution: {distribution}\nArchive SHA256: {expected["archive_sha256"]}')
-    release = ('release', 'create', 'v1.5.0', str(archive), '--repo', checks.REPOSITORY,
-               '--target', source, '--title', 'Convertia 1.5.0', '--notes', notes)
+    release = ('release', 'create', f'v{version}', str(archive), '--repo', checks.REPOSITORY,
+               '--target', source, '--title', f'Convertia {version}', '--notes', notes)
     assert calls == ([] if mode == 'bad-host' else [api, release] if mode == 'valid' else [api])
