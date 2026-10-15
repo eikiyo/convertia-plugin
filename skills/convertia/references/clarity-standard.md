@@ -37,7 +37,7 @@ For chat, aim for a 350-600-word report with 2-4 bullets per ordinary section. E
 
 The same sentence-level clarity edit applies inside native documents. The host chooses artifact layout and length; chat word ranges and fixed chat endings do not constrain the document. Preserve the user's purpose and evidence without adding a custom report template.
 
-Legal and Regulation apply legal-language-contract.md. Edit English and Swedish independently for readability, then compare meaning: actors, numbers, dates, obligations, exceptions, negation and uncertainty must match. Keep Swedish legal terms in both. Short follow-ups stay short per language. A shorter translation must not omit a material condition.
+Legal and Regulation apply legal-language-contract.md. Improve readability within each version without changing its set of material points, then run the shared contract's completeness check in both directions. Actors, numbers, dates, obligations, exceptions, negation and uncertainty must match. Keep Swedish legal terms in both. Short follow-ups stay short per language. Shorten both versions together rather than treating Swedish as a summary.
 
 Read every section, bullet, source label and action once more. Can a reader say what it means without translating business jargon? Does each block answer one question? Are the decisive condition and next step visible? Are repeated conclusions removed? Are terms defined before they are used? Are examples clearly hypothetical? Does the follow-up answer only its question? Revise failures before sending.
 

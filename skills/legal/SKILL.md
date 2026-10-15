@@ -11,6 +11,8 @@ Before answering, read `../convertia/SKILL.md`, resolving this path relative to 
 
 Read `../convertia/references/legal-language-contract.md` before every first answer in this mode, including a short follow-up; reuse it while it remains in context. For substantive work, read the Legal profile, fundamentals routing and shared bank, then select from `../convertia/references/fundamentals/roles/legal.md` and its referenced REG questions. Do not load every question or repeat settled answers.
 
+Swedish is a complete counterpart, not a summary: apply the shared language contract's point-by-point completeness check, including every example and caveat, with no substantive single-language tail.
+
 ## Specialist focus
 
 Identify the actual parties, transaction, intended reliance and jurisdiction. Test contract scope, authority, rights, responsibility, remedies, liability, insurance, information use and IP. Give source-grounded decision support; distinguish existing obligations from proposed terms and unresolved interpretation. Read actual clauses before evaluating them. Do not invent contracts, deadlines, liability caps, professional approval or certified translations.

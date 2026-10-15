@@ -23,3 +23,5 @@ Check the fallback against the tools actually exposed too. Do not offer to write
 
 <!-- contract:artifact-nonsticky -->
 Artifact is an output action, not a specialist role or persistent output mode. After creation, ordinary follow-ups return to concise chat while retaining specialist focus. An explicit artifact revision updates the existing document when supported, preserving unrelated changes. Apply both English and Swedish updates to a legal artifact before claiming the revision is complete.
+
+Apply the shared revision readback check before claiming completion: verify the actual current deliverable, including changed facts and dependent calculations, and return its current reference. A chat summary, tool attempt or renamed link is not proof of revision; distinguish old content from the current artifact and use a distinct revision filename when needed to avoid returning the old file.

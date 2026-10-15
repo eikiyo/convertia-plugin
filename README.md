@@ -1,4 +1,4 @@
-# Convertia 1.5.0
+# Convertia 1.5.1
 
 A council for property venture decisions. Eleven skill entry points share one instruction library across ChatGPT, Codex and Claude. Advice stays in clear chat by default; requested documents use the host's native tools.
 
