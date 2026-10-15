@@ -24,18 +24,18 @@ def rewrite_archive(path, transform):
 
 def test_actual_archive_validates_outside_package(candidate, tmp_path):
     path, sha = archive_candidate(candidate, tmp_path)
-    assert 'clean archive: 38 runtime files' in checks.validate_archive(path, candidate, sha)
-    assert 'clean archive: 38 runtime files' in checks.validate_archive(path, candidate)
+    assert 'clean archive: 42 runtime files' in checks.validate_archive(path, candidate, sha)
+    assert 'clean archive: 42 runtime files' in checks.validate_archive(path, candidate)
     with zipfile.ZipFile(path) as archive:
         assert 'tools/release_checks.py' not in archive.namelist()
         assert 'AGENTS.md' not in archive.namelist()
         assert '.gitattributes' not in archive.namelist()
-        assert len([info for info in archive.infolist() if not info.is_dir()]) == 38
+        assert len([info for info in archive.infolist() if not info.is_dir()]) == 42
 
 
 def test_prefixed_archive(candidate, tmp_path):
     path, sha = archive_candidate(candidate, tmp_path, 'convertia-release/')
-    assert 'clean archive: 38 runtime files' in checks.validate_archive(path, candidate, sha, 'convertia-release')
+    assert 'clean archive: 42 runtime files' in checks.validate_archive(path, candidate, sha, 'convertia-release')
     with pytest.raises(ValueError, match='Unexpected archive prefix'):
         checks.validate_archive(path, candidate, sha, 'other')
 
@@ -97,14 +97,14 @@ def test_archive_commit_provenance(candidate, tmp_path):
 def test_archive_uses_committed_bytes(candidate, tmp_path):
     path, sha = archive_candidate(candidate, tmp_path)
     (candidate / 'LICENSE').write_text('uncommitted corruption')
-    assert 'clean archive: 38' in checks.validate_archive(path, candidate, sha)
+    assert 'clean archive: 42' in checks.validate_archive(path, candidate, sha)
     with pytest.raises(ValueError, match='Archive bytes differ'):
         checks.validate_archive(path, candidate)
 
 
-@pytest.mark.parametrize('lock,diagnostic', [([], 'Expected 29'), ({}, 'Expected 29'),
-    ({f'skills/a{i}.py': 'x' for i in range(29)}, 'Invalid runtime skill'),
-    ({f'outside/a{i}.md': 'x' for i in range(29)}, 'Invalid runtime skill')])
+@pytest.mark.parametrize('lock,diagnostic', [([], 'Expected 33'), ({}, 'Expected 33'),
+    ({f'skills/a{i}.py': 'x' for i in range(33)}, 'Invalid runtime skill'),
+    ({f'outside/a{i}.md': 'x' for i in range(33)}, 'Invalid runtime skill')])
 def test_invalid_runtime_lock(lock, diagnostic):
     with pytest.raises(ValueError, match=diagnostic):
         checks.runtime_paths(lock)
@@ -140,7 +140,7 @@ def test_cli_success_and_usage(candidate, tmp_path, monkeypatch, capsys):
     path, sha = archive_candidate(candidate, tmp_path)
     monkeypatch.setattr(checks.sys, 'argv', ['verify-archive', str(path), str(candidate), sha])
     assert checks.main() == 0
-    assert 'clean archive: 38' in capsys.readouterr().out
+    assert 'clean archive: 42' in capsys.readouterr().out
     assert checks.main([]) == 1
     assert 'Usage:' in capsys.readouterr().err
 

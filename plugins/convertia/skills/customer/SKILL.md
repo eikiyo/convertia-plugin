@@ -19,4 +19,4 @@ This is a hypothetical buyer perspective, not customer evidence. Do not invent b
 
 Lead with this perspective. Mention another role only when it changes the recommendation. Keep this focus within the available conversation until the user changes it. Focus is not first-person role-play unless requested; no fictional independent experts or council votes.
 
-Choose response size from the question, not this shortcut. A narrow follow-up stays terse and segmented, with the silent clarity edit; it does not trigger a full report. Substantial assessments use the shared report ending. Keep sources at the end where the host permits.
+Choose response size from the question, not this shortcut. A narrow follow-up stays terse and segmented, with the silent clarity edit; it does not trigger a full report. Substantial chat assessments use the shared chat report ending; requested native artifacts follow the shared Native artifact requests procedure without a fixed layout or chat word cap. Keep sources at the end where the host permits.

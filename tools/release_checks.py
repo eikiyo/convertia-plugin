@@ -7,10 +7,13 @@ import hashlib
 import json
 import re
 from pathlib import Path
+from content_contracts import contract_errors
 
 SKILLS = {'convertia', 'finance', 'regulation', 'architect', 'operations',
-          'customer', 'investor', 'validation', 'due-diligence'}
+          'customer', 'investor', 'validation', 'due-diligence', 'artifact', 'legal'}
 MANIFESTS = ('plugin.json', '.codex-plugin/plugin.json', '.claude-plugin/plugin.json')
+QUESTION_COUNT = 990
+LOCKED_SKILL_FILES = 33
 METADATA = ('description', 'author', 'keywords', 'repository', 'license')
 
 
@@ -127,7 +130,13 @@ def check_content(root):
     ids = []
     for path in (root / 'skills/convertia/references/fundamentals').rglob('*.md'):
         ids.extend(re.findall(r'^- ([A-Z][A-Z0-9-]*-[A-Z]*\d+):', path.read_text(), re.M))
-    require(len(ids) == 918 and len(set(ids)) == 918, f'Question IDs: {len(ids)} / {len(set(ids))}')
+    require(len(ids) == QUESTION_COUNT and len(set(ids)) == QUESTION_COUNT, f'Question IDs: {len(ids)} / {len(set(ids))}')
+    legacy = sorted(identifier for identifier in ids if not identifier.startswith('LEG-'))
+    require(hashlib.sha256('\n'.join(legacy).encode()).hexdigest() ==
+            'ca44dc9be4787d931a2caf142d8d5e13b212573ed5dacc9e5c6f5acb8ad519b7',
+            'Legacy question identifiers changed')
+    require(set(ids) - set(legacy) == {f'LEG-{number:03}' for number in range(1, 73)},
+            'Legal question identifier range changed')
     require(not list((root / 'skills').rglob('*.pdf')), 'Private PDF included')
     require(not (root / '.mcp.json').exists(), 'Unexpected MCP dependency')
     return len(actual)
@@ -139,4 +148,6 @@ def validate(root, previous=None):
     check_metadata(root, version)
     check_skills(root)
     count = check_content(root)
-    return f'PASS: {version}; {count} shared files; 918 unique questions; content lock matches'
+    errors = contract_errors(root)
+    require(not errors, '; '.join(errors))
+    return f'PASS: {version}; {count} shared files; {QUESTION_COUNT} unique questions; content lock matches'

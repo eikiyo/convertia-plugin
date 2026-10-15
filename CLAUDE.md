@@ -12,7 +12,7 @@ Read MAINTAINING.md and TESTING.md before changing this repository. These instru
 - Preserve one version across both platforms. Raise all release metadata together, retain immutable tags and verify each host's observed version separately.
 - Markdown content, vendor internals and hosted conversation behavior do not have a code-line coverage percentage. Record hosted conversation E2E separately as passed, failed or not run. A static or API check does not establish behavioral parity.
 
-No model call, UI rendering or transcript storage is owned by this text-only plugin. Do not invent API coverage for absent services.
+No model call, UI rendering or transcript storage is owned by this instruction plugin. Chat is the default; explicit artifact requests use the host's existing document capabilities. Do not invent API coverage for absent services. Native artifact success, export availability and bilingual meaning require actual host observations, not keyword matches.
 
 ## Law: minimal install contents
 

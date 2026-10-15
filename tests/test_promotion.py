@@ -15,7 +15,7 @@ from test_distribution import origin
 from test_repository_policy import git
 
 FIELDS = ('source_commit', 'distribution_commit', 'runtime_tree', 'version', 'archive_sha256')
-EXPECTED = dict(zip(FIELDS, ('a' * 40, 'b' * 40, 'c' * 40, '1.4.5', 'd' * 64)))
+EXPECTED = dict(zip(FIELDS, ('a' * 40, 'b' * 40, 'c' * 40, '1.5.0', 'd' * 64)))
 
 
 def make_evidence(expected):
@@ -37,6 +37,14 @@ def evidence():
 
 def test_valid_host_evidence(evidence):
     assert checks.check_host_evidence(evidence, *EXPECTED.values()) is None
+
+
+@pytest.mark.parametrize('host', ['claude', 'chatgpt'])
+def test_previous_five_case_attestation_cannot_promote_new_features(evidence, host):
+    evidence['hosts'][host]['smoke'] = {case: 'passed' for case in (
+        'all_skills', 'focused_answer', 'short_followup', 'role_switch', 'due_diligence')}
+    with pytest.raises(ValueError, match=f'Host smoke checks incomplete: {host}'):
+        checks.check_host_evidence(evidence, *EXPECTED.values())
 
 
 @pytest.mark.parametrize('host', ['claude', 'chatgpt'])
@@ -214,7 +222,7 @@ def release_candidate(origin, candidate, tmp_path):
     distribution = git(root, '-c', 'user.name=Test', '-c', 'user.email=test@example.invalid',
                        'commit-tree', tree, '-m', f'Source-Commit: {source}')
     git(root, 'push', 'origin', f'{distribution}:refs/heads/distribution')
-    expected = dict(zip(FIELDS, (source, distribution, tree, '1.4.5',
+    expected = dict(zip(FIELDS, (source, distribution, tree, '1.5.0',
                                 hashlib.sha256(archive.read_bytes()).hexdigest())))
     return root, archive, source, distribution, expected
 
@@ -236,14 +244,14 @@ def test_existing_release_tag(release_candidate, tag_kind, wrong):
     if tag_kind != 'absent':
         options = ['-am', 'Release attestation'] if tag_kind == 'annotated' else []
         git(root, '-c', 'user.name=Test', '-c', 'user.email=test@example.invalid',
-            '-c', 'tag.gpgsign=false', 'tag', *options, 'v1.4.5',
+            '-c', 'tag.gpgsign=false', 'tag', *options, 'v1.5.0',
             distribution if wrong else source)
-        git(root, 'push', 'origin', 'refs/tags/v1.4.5')
+        git(root, 'push', 'origin', 'refs/tags/v1.5.0')
     if wrong:
         with pytest.raises(ValueError, match='Existing release tag points to another commit'):
-            checks.check_current_candidate(root, source, distribution, '1.4.5')
+            checks.check_current_candidate(root, source, distribution, '1.5.0')
     else:
-        assert checks.check_current_candidate(root, source, distribution, '1.4.5') is None
+        assert checks.check_current_candidate(root, source, distribution, '1.5.0') is None
 
 
 @pytest.mark.parametrize('ref', ['main', 'distribution'])
@@ -251,7 +259,7 @@ def test_stale_remote_candidate(release_candidate, ref):
     root, _, source, distribution, _ = release_candidate
     advance_remote(root, ref)
     with pytest.raises(ValueError, match='Stale promotion: remote candidate changed'):
-        checks.check_current_candidate(root, source, distribution, '1.4.5')
+        checks.check_current_candidate(root, source, distribution, '1.5.0')
 
 
 @pytest.mark.parametrize('mode', ['valid', 'bad-host', 'bad-ci', 'stale-main', 'stale-distribution'])
@@ -276,8 +284,8 @@ def test_promotion_gate_order(release_candidate, tmp_path, monkeypatch, mode):
         with pytest.raises(ValueError, match=diagnostic):
             checks.promote_release(root, archive, source, distribution, path)
     api = ('api', f'repos/{checks.REPOSITORY}/actions/runs/123')
-    notes = (f'Both-host acceptance attested for version 1.4.5.\nSource: {source}\n'
+    notes = (f'Both-host acceptance attested for version 1.5.0.\nSource: {source}\n'
              f'Distribution: {distribution}\nArchive SHA256: {expected["archive_sha256"]}')
-    release = ('release', 'create', 'v1.4.5', str(archive), '--repo', checks.REPOSITORY,
-               '--target', source, '--title', 'Convertia 1.4.5', '--notes', notes)
+    release = ('release', 'create', 'v1.5.0', str(archive), '--repo', checks.REPOSITORY,
+               '--target', source, '--title', 'Convertia 1.5.0', '--notes', notes)
     assert calls == ([] if mode == 'bad-host' else [api, release] if mode == 'valid' else [api])

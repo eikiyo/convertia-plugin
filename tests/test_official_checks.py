@@ -11,7 +11,7 @@ import official_checks as checks
 
 def test_official_validation_accepts_package(package):
     assert checks.validate_official(package) == (
-        'PASS: official portable schema and all nine Agent Skills entrypoints')
+        'PASS: official portable schema and all 11 Agent Skills entrypoints')
 
 
 @pytest.mark.parametrize('mutation', ['extra', 'missing'])
