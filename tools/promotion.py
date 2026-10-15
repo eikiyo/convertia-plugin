@@ -13,7 +13,11 @@ from distribution import validate_distribution, remote_refs
 from release_checks import read_json, require, SKILLS
 
 REPOSITORY = 'eikiyo/convertia-plugin'
-SMOKE_CASES = {'all_skills', 'focused_answer', 'short_followup', 'role_switch', 'due_diligence'}
+SMOKE_CASES = {'all_skills', 'focused_answer', 'short_followup', 'role_switch', 'due_diligence',
+               'natural_language_artifact', 'artifact_create_open', 'artifact_revision_export',
+               'artifact_unavailable', 'legal_bilingual', 'regulation_bilingual',
+               'bilingual_revision', 'language_and_terms', 'artifact_focus_return',
+               'no_artifact_on_followup'}
 
 
 def check_host_evidence(evidence, source, distribution, tree, version, digest,

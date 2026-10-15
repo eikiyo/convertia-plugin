@@ -79,7 +79,7 @@ def test_official_wrapper(candidate, tmp_path, invalid):
         assert log.read_text() == ''
     else:
         assert result.returncode == 0, result.stderr
-        assert 'PASS: official portable schema and all nine Agent Skills entrypoints' in result.stdout
+        assert 'PASS: official portable schema and all 11 Agent Skills entrypoints' in result.stdout
         targets = ['.claude-plugin/marketplace.json',
                    'plugins/convertia/.claude-plugin/plugin.json',
                    str(shipped / '.claude-plugin/marketplace.json'),

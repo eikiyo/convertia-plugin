@@ -12,7 +12,7 @@ import sys
 import tempfile
 import zipfile
 from pathlib import Path, PurePosixPath
-from release_checks import MANIFESTS, require, validate
+from release_checks import MANIFESTS, LOCKED_SKILL_FILES, require, validate
 from repo_layout import plugin_root
 
 RUNTIME = {*MANIFESTS, '.claude-plugin/marketplace.json', '.claude-plugin/icon.png',
@@ -28,7 +28,7 @@ def safe_path(name):
 
 
 def runtime_paths(lock):
-    require(isinstance(lock, dict) and len(lock) == 29, 'Expected 29 locked skill files')
+    require(isinstance(lock, dict) and len(lock) == LOCKED_SKILL_FILES, f'Expected {LOCKED_SKILL_FILES} locked skill files')
     for name in lock:
         safe_path(name)
         require(name.startswith('skills/') and name.endswith('.md'),

@@ -1,6 +1,6 @@
 # Convertia public context
 
-Convertia provides early decision support for Swedish property ventures. Its council combines Regulation, Architect & Engineer, Finance & Business Case, Operations, Customer, Investor and Validation Coach.
+Convertia provides early decision support for Swedish property ventures. Its council combines Legal, Regulation, Architect & Engineer, Finance & Business Case, Operations, Customer, Investor and Validation Coach.
 
 ## Starting point
 
@@ -16,7 +16,7 @@ Separate hypotheses, user statements and independently verified facts. A simulat
 
 ## Tools and data
 
-This package supplies instructions and reference questions only. No renderer, external API, tracking, transcript collection, storage or persistent memory is connected. The chat host controls its model and data handling. Previous infrastructure is separate.
+This package supplies instructions and reference questions only. No renderer, external API, tracking, transcript collection, storage or persistent memory is connected by the plugin. The chat host controls its model and data handling. Requested native artifacts use that host's available document tools and storage; this package adds no storage service or automatic chat capture. Creation does not authorize public sharing. Previous infrastructure is separate.
 
 ## Reference precedence
 

@@ -42,7 +42,7 @@ def refresh_lock(root):
 def expected_pass(root):
     version = (root / 'VERSION').read_text().strip()
     count = len(json.loads((root / 'CONTENT.json').read_text()))
-    return f'PASS: {version}; {count} shared files; 918 unique questions; content lock matches'
+    return f'PASS: {version}; {count} shared files; 990 unique questions; content lock matches'
 
 
 @pytest.fixture

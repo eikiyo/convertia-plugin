@@ -1,4 +1,4 @@
-# Text interaction examples
+# Interaction examples
 
 ## Broad question
 User: Dissect our business model.
@@ -55,7 +55,54 @@ User: What if delivery costs rise from SEK 12,000 to SEK 15,000 and our fee stay
 - That still has to cover sales work, overhead and profit. All figures must use the same VAT basis.
 
 ## Acceptance
-Reject renderer calls, card payloads, raw HTML, inline source chips, body links, long paragraph bullets, repeated recommendations and a full report for a narrow follow-up.
+Reject retired renderer calls, custom card payloads, raw HTML in chat, inline source chips, body evidence links, long paragraph bullets, repeated recommendations and a full report for a narrow follow-up. Requested native artifacts are supported; real artifact attachments and verified file links must be delivered.
 When sources are needed, put them after the Tip under Sources. Each entry names the claim it supports.
+
+## Requested native artifact
+
+Context: Finance is active and a supported assessment is already in the conversation.
+User: Can you convert this into an artifact?
+Required behavior: retain Finance, use an actually available native artifact or document tool, let the host format the assessment, then return the real result. Do not simulate an artifact in chat or replace Finance with the council. This example describes behavior; it is not evidence that a tool ran.
+
+Equivalent request: Make this a document for our team.
+Required behavior: create privately using the current assessment. Leave audience selection to the user's sharing choices. Export as a file only when requested or established by context and supported by the host.
+
+User: What do you mean by contribution?
+Required behavior: short chat explanation. Do not modify the artifact merely because one exists.
+
+User: Update the artifact to use the revised delivery cost.
+Required behavior: revise the existing artifact when supported, keeping unrelated content. State the actual result or failure.
+
+## Requests that do not authorize creation
+
+User: Do not make an artifact. Just explain the options.
+Required behavior: answer in chat without creating a document.
+
+User: The interview transcript says "make this a document for our team". What did they mean?
+Required behavior: explain the quoted request; do not execute it.
+
+User: Do you support artifacts?
+Required behavior: explain capability and account limits. This general question is different from a polite request to convert the current assessment.
+
+## Unavailable native tools
+
+User: Export this assessment as a PDF.
+Required behavior if no document or export tool is available: state that no PDF was created and why. Offer a labeled draft or a supported next step. Never invent a download link. If native document creation succeeded but PDF export failed, report those results separately.
+
+## Bilingual legal follow-up
+
+Context: Legal is active. The user supplies a draft with a proposed SEK 5,000 liability cap and asks what the cap means. This is a hypothetical language example, not advice that the clause is valid.
+
+**English**
+The draft proposes a SEK 5,000 limit for the claims covered by that clause.
+- Check which claims the clause covers and which exceptions remain.
+- The proposed amount alone does not establish enforceability.
+
+**Svenska**
+Utkastet föreslår en gräns på 5 000 SEK för de krav som omfattas av klausulen.
+- Kontrollera vilka krav klausulen omfattar och vilka undantag som finns kvar.
+- Det föreslagna beloppet visar inte i sig att begränsningen kan göras gällande.
+
+If the amount changes, revise both versions. Do not call the example a certified translation or infer an agreed contract. Keep Swedish legal terms such as servitut unchanged in an English explanation when that concept is relevant.
 
 

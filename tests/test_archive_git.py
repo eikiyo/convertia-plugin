@@ -29,7 +29,7 @@ def test_scoped_archive_excludes_external_tracked_files(candidate, tmp_path, nam
     file.write_text('unapproved runtime file')
     commit_candidate(candidate)
     archive, sha = archive_candidate(candidate, tmp_path)
-    assert 'clean archive: 38' in checks.validate_archive(archive, candidate, sha)
+    assert 'clean archive: 42' in checks.validate_archive(archive, candidate, sha)
     with zipfile.ZipFile(archive) as package:
         assert name not in package.namelist()
 
@@ -90,7 +90,7 @@ def test_archive_launcher_from_outside(candidate, tmp_path):
     command = ['bash', str(candidate.parents[1] / 'tools/verify-archive.sh'), str(archive), str(candidate), sha]
     result = subprocess.run(command, cwd=tmp_path, env=env, capture_output=True, text=True, timeout=30)
     assert result.returncode == 0, result.stderr
-    assert 'clean archive: 38' in result.stdout
+    assert 'clean archive: 42' in result.stdout
     result = subprocess.run(command[:-1], cwd=tmp_path, env=env, capture_output=True, text=True, timeout=30)
     assert result.returncode == 1
     assert 'Usage:' in result.stderr

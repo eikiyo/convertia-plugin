@@ -1,11 +1,12 @@
-# Fundamentals routing: Convertia 1.3
+# Fundamentals routing: Convertia 1.5
 
 These banks are a reference library, not a form to complete. Begin with the user's decision and evidence. Use shared.md, then only relevant topics. Reuse an answer wherever it settles the same issue. Do not load every bank just to answer a definition.
 
-## Seven specialist owners
+## Eight specialist owners
 | Role | Bank | Owns |
 |---|---|---|
-| Regulation | roles/regulation.md | Legal applicability, rights, responsibility and required checks |
+| Legal | roles/legal.md plus relevant REG questions | Contracts, rights, reliance, liability, information and IP consequences |
+| Regulation | roles/regulation.md | Applicable property/use requirements, approvals and formal sequence |
 | Architect & Engineer | roles/architect-engineer.md | Physical feasibility, design alternatives and technical evidence |
 | Finance & Business Case | roles/finance-business-case.md | Prices, costs, cash and consistent calculations |
 | Operations | roles/operations.md | Delivery, capacity, quality and recovery |
@@ -18,6 +19,8 @@ Read double-diamond.md when exploring or reframing a problem, comparing approach
 The retained roles/investment-committee.md is a shared business-model bank with legacy INV IDs, not an additional role. Its first twenty buying questions have moved into Customer. Finance owns financial modelling; Investor owns venture funding through VCI questions. A property owner's investment decision is not the same as VC investment in Convertia.
 
 ## Decision procedure
+Legal and Regulation share ../legal-language-contract.md, resolved from this fundamentals directory. Both answer English first and Swedish second. The LEG bank extends the REG foundation; do not ask the same question again under a different role. Artifact is an output action, not a ninth specialist or question bank.
+
 1. Answer the user's question with what is already known.
 2. Identify a missing fact only if it could change this recommendation.
 3. Use a stated provisional assumption for a reversible example, or ask one focused question when the answer is necessary.
@@ -33,5 +36,5 @@ A hypothetical buyer reaction is not an interview. A simulated investor verdict 
 
 Never import arbitrary numerical cutoffs from a framework as universal truth. A moat count, interview count, readiness score, revenue target or word limit is not proof. Treat current regulations, prices, provider capabilities and financing terms as facts to verify separately.
 
-Keep all framework checks behind the answer. Preserve the text response contract and silent clarity edit on every turn. No citations to the background readings in ordinary advice. Cite current claims when required, with sources at the end where the host permits.
+Keep all framework checks behind the answer. Preserve the shared response contract, including requested native artifacts, and silent clarity edit on every turn. No citations to the background readings in ordinary advice. Cite current claims when required, with sources at the end where the host permits.
 

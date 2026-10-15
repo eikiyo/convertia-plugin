@@ -25,4 +25,4 @@ def validate_official(root):
     for path in paths:
         errors = skills_ref.validate(path.parent)
         require(not errors, f'Official skill validation failed: {path.parent.name}: {errors}')
-    return 'PASS: official portable schema and all nine Agent Skills entrypoints'
+    return f'PASS: official portable schema and all {len(SKILLS)} Agent Skills entrypoints'
