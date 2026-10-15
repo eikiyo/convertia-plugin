@@ -1,5 +1,5 @@
 # Location: tests/test_acceptance_inventory.py
-# Purpose: keep the approved 1.5.0 command and host-acceptance inventory explicit.
+# Purpose: keep approved commands and hosted professional-depth acceptance explicit.
 # Functions: census controls for commands and required hosted journeys.
 # Calls: production skill and promotion inventories, plus documented matrix reads.
 # Imports: pathlib, promotion, release_checks.
@@ -20,7 +20,7 @@ def test_acceptance_gate_includes_all_new_journeys_and_documents_them():
         'natural_language_artifact', 'artifact_create_open', 'artifact_revision_export',
         'artifact_unavailable', 'legal_bilingual', 'regulation_bilingual',
         'bilingual_revision', 'language_and_terms', 'artifact_focus_return',
-        'no_artifact_on_followup',
+        'no_artifact_on_followup', 'professional_depth', 'depth_followup',
     }
     assert SMOKE_CASES == added | {
         'all_skills', 'focused_answer', 'short_followup', 'role_switch', 'due_diligence',

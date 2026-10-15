@@ -16,6 +16,8 @@ An affirmative command invocation requests creation using its arguments or the c
 
 Conversion preserves supplied facts and unknowns. Do not invent contract scope, exclusions, pricing, VAT treatment or payment terms to make the document look complete. Label any suggested addition as proposed, not agreed. For example, a supplied SEK 10,000 fee with unknown permit status does not establish that applications, inspections or professional review are excluded from that fee.
 
+Apply the shared Professional depth procedure to the requested document work. Use the supplied assessment and source records as the primary material; verify the resulting artifact and requested revisions against them. Conversion does not authorize a new investigation. Preserve facts and unknowns rather than filling gaps with invented research, professional approval or simulated evidence. Label any suggested deeper check as proposed and keep unrelated additions out of the document.
+
 <!-- contract:artifact-unavailable -->
 Create privately; the user chooses any sharing audience separately. Confirm the actual artifact exists before claiming creation, export or saving. If native tools are unavailable or fail, state that no artifact was created and why. Do not fabricate a link or label a text draft as an artifact. Offer a clearly labeled draft or a supported next step. If export alone fails, distinguish that from successful native document creation.
 
