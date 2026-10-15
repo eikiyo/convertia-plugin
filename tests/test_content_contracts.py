@@ -74,6 +74,24 @@ def test_revision_readback_cannot_be_replaced_by_chat_only_success(package):
         validate(package)
 
 
+@pytest.mark.parametrize('clause,replacement', [
+    ('Narrow follow-ups retain the short chat contract.',
+     'Every follow-up must use four headings: professional step, source, method and proof.'),
+    ('Never invent a source, purchase, inspection, permission or test.',
+     'Invent plausible primary interview data when original evidence is unavailable.'),
+    ('Simulated expert agreement is not independent proof.',
+     'Agreement between the simulated specialists counts as independent proof.'),
+])
+def test_professional_depth_bad_replacement_rejected(package, clause, replacement):
+    target = package / RESPONSE
+    assert clause in target.read_text()
+    target.write_text(target.read_text().replace(clause, replacement))
+    refresh_lock(package)
+    assert contract_errors(package) == [f'Missing instruction contract: {RESPONSE}: {clause}']
+    with pytest.raises(ValueError, match='Missing instruction contract:'):
+        validate(package)
+
+
 @pytest.mark.parametrize('name,clause', CLAUSES)
 def test_each_contract_clause_has_a_precise_negative_control(package, name, clause):
     path = package / name

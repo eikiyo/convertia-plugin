@@ -1,4 +1,6 @@
-# Convertia 1.5.1
+# Convertia 1.6.0
+
+This update applies a shared professional-depth check: the missing expert step, original evidence, a specific method and independent verification. Each specialist has concrete source, method and proof guidance. Follow-ups stay short; artifacts preserve supplied facts and unknowns.
 
 A council for property venture decisions. Eleven skill entry points share one instruction library across ChatGPT, Codex and Claude. Advice stays in clear chat by default; requested documents use the host's native tools.
 

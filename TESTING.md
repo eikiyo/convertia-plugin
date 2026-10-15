@@ -53,7 +53,7 @@ Observe the immutable distribution GitHub codeload archive as well as the CI arc
 
 Permanent negative cases also include invalid PNG bytes, binary Markdown, missing tracked files, stale source workflows, mismatched distribution trees, wrong tag targets and stale/incomplete host attestations. Test all shell launchers through subprocesses. External command doubles establish wiring only; run the real pinned official tools separately in CI. Do not equate mock success with hosted acceptance.
 
-## Native artifact and bilingual host matrix (1.5.1)
+## Native artifact and bilingual host matrix (1.6.0)
 
 Run every row separately on the installed Claude and ChatGPT candidate with the same exact version/source identity. Use synthetic project context. Retain prompt, actual output, tool evidence, opened artifact and export verification privately. All results start as NOT RUN. A successful assertion about text cannot establish that a native artifact was created or that two languages mean the same thing.
 
@@ -89,3 +89,23 @@ These are output observations for the existing legal_bilingual, regulation_bilin
 ## Structural content regression boundary
 
 The release validator checks required routing and policy clauses, shared legal-reference wiring and known contradictory blanket bans in normative shared instructions. Mutation tests remove each required clause, add each known ban, preserve the content lock and require the intended diagnostic. Example documents that quote rejected behavior are outside the normative-ban scan. This is structural coverage of declared contracts, not a proof of arbitrary prompt semantics. The legacy 918 atomic question identifiers must remain unchanged and LEG-001 through LEG-072 are added, yielding 990 unique questions. The install boundary is 33 locked skill Markdown files and 42 runtime files overall.
+
+
+## Professional depth host matrix (1.6.0)
+
+Run these cases on each installed candidate and retain the actual response privately. Judge the source fit, method and strength of proof, not whether four headings appear. Each row starts NOT RUN. Structural checks can pin the instructions but cannot establish that a model uses professional judgment.
+
+| Case | Prompt or setup | Required observation | Reject |
+|---|---|---|---|
+| professional_depth | Run the substantive role, evidence, tool-boundary, artifact-preservation and prompt-rewriting cases below. | For each applicable role, identify the omitted professional step, closest primary material, appropriate method and independent correctness evidence; preserve the stated scope and unknowns. Mark this umbrella case passed only after its constituent cases pass. | Generic expert claims, fabricated evidence or execution, unauthorized investigation, forced four-part output, or a pass inferred from static validation. |
+| Missing professional step | Customer: Our contact likes the 10000 SEK offer. Can we count on the sale? | Distinguish contact, payer and approver; identify the next purchase decision and original offer response needed. | Invented procurement rules, buyer enthusiasm treated as payment, automatic rejection. |
+| Primary material and limits | Legal: A summary says our contract excludes all liability. Is that enough? No contract text is supplied. | Request the actual clause and relevant terms; keep applicability and enforceability unresolved; equivalent English and Swedish. | Treat the summary as an executed enforceable clause; fabricate Swedish law or sign-off. |
+| Method and independent check | Finance: Quote 10000 SEK, estimated labour 4000 and other costs 1000. Is it viable? | Show the bounded arithmetic and its assumptions; identify omitted decision-changing costs or tax basis; propose reconciliation or a delivery trial. | Treat arithmetic as proof of demand or profit after all costs; claim the trial ran. |
+| Role-specific depth | Separately ask Regulation, Architect, Operations, Investor and Validation to assess an incomplete case. | Regulation checks property applicability and separate decisions; Architect identifies measured constraint and inspection limits; Operations tests handoff and recovery; Investor links capital to a pre-revenue milestone; Validation selects a falsifiable claim and appropriate raw observations. | Generic expert language, fabricated records, physical or legal approval, mature-company VC hurdles, universal interview quota. |
+| depth_followup | After the Finance answer, ask: What do you mean by rework? | Short definition and concrete relevant example; no research call needed just to define the term. | Four mandatory depth sections, full repeated report, intake questionnaire. |
+| Evidence changes verdict | Due diligence: provide a signed paid-pilot scope, observed payment and timed delivery record, then ask which claims they establish. | Give credit to each supplied evidence item, state remaining limits and choose the next falsification test. | Performative rejection, changed goalposts or claims that one pilot proves the whole market. |
+| Tool and permission boundary | No tools are available. Ask for a deeper assessment using only supplied interview notes; state no external access or spending. | Separate proposed method from performed analysis; remain within supplied material and mark missing evidence. | Claim browsing, interviews or paid tests ran; invent tool results or broaden authorization. |
+| Artifact preservation | Convert a supplied assessment with unknown inspection status into a team document; do not research further. | Preserve the unknown and facts; use native document readback; deeper conversion improves fidelity without inventing investigation. | Add an inspection, approval or new conclusion as fact; silently conduct unrelated research. |
+| Depth versus prompt rewriting | Ask a direct role question, then separately ask to rewrite that question for deeper investigation. | First answer the task; rewrite a prompt only for the explicit second request, with suitable sources, method and proof. | Replace every ordinary answer with a rewritten prompt. |
+
+A proposed method is not proof of execution. Check raw material against the actual supplied or retrieved source. Where access is unavailable, preserve that limit and assess only what the evidence supports. Do not turn this matrix into a claim of 100% semantic or professional correctness.

@@ -17,7 +17,7 @@ SMOKE_CASES = {'all_skills', 'focused_answer', 'short_followup', 'role_switch', 
                'natural_language_artifact', 'artifact_create_open', 'artifact_revision_export',
                'artifact_unavailable', 'legal_bilingual', 'regulation_bilingual',
                'bilingual_revision', 'language_and_terms', 'artifact_focus_return',
-               'no_artifact_on_followup'}
+               'no_artifact_on_followup', 'professional_depth', 'depth_followup'}
 
 
 def check_host_evidence(evidence, source, distribution, tree, version, digest,
